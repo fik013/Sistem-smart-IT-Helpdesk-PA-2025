@@ -16,6 +16,6 @@ class UserDashboardController extends Controller
         $activeTickets = $user->tickets()->where('status', '!=', 'completed')->get();
         $announcements = Announcement::where('is_active', true)->latest()->get();
         
-        return view('user.dashboard', compact('user', 'inventories', 'activeTickets', 'announcements'));
+        return view('user.dashboard.index', compact('user', 'inventories', 'activeTickets', 'announcements'));
     }
 }

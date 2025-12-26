@@ -8,9 +8,24 @@ use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+        $tickets = $user->tickets()->latest()->paginate(10);
+        
+        $stats = [
+            'total' => $user->tickets()->count(),
+            'open' => $user->tickets()->where('status', 'pending')->count(), // 'open' usually mapped to pending or open
+            'processing' => $user->tickets()->where('status', 'in_progress')->count(),
+            'completed' => $user->tickets()->where('status', 'completed')->count(),
+        ];
+        
+        return view('user.tickets.index', compact('tickets', 'stats'));
+    }
+
     public function create()
     {
-        return view('tickets.create');
+        return view('user.tickets.create');
     }
 
     public function store(Request $request)

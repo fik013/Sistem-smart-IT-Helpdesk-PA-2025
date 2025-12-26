@@ -1,0 +1,85 @@
+/* Stitch Design System - Custom Styles */
+
+body {
+    background-color: #191a1f; /* Stitch Background */
+    color: #ffffff;
+    font-family: 'Google Sans Text', sans-serif;
+}
+
+/* Glass Morphism Adapted for Dark Theme */
+.glass {
+    background-color: rgba(32, 33, 36, 0.6); /* Stitch Surface roughly */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.glass-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border */
+    border-radius: 1rem; /* rounded-2xl */
+    padding: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(138, 180, 248, 0.3); /* Google Blue accent on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Buttons */
+.btn-primary {
+    padding: 0.625rem 1.5rem;
+    border-radius: 9999px; /* Pill shape common in Google designs */
+    background: #8ab4f8; /* Google Blue Light */
+    color: #191a1f;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    background: #aecbfa;
+    box-shadow: 0 4px 8px rgba(138, 180, 248, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.5);
+}
+
+/* Animations */
+.animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.0, 0.0, 0.2, 1) forwards;
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Text Gradients */
+.text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(to right, #8ab4f8, #c58af9); /* Google Blue to Purple */
+    color: transparent;
+}
