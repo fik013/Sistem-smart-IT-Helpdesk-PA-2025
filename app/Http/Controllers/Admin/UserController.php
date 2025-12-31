@@ -57,4 +57,37 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'User account created successfully.');
     }
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'role' => ['required', 'in:admin,employee'],
+            'department' => ['nullable', 'string', 'max:255'],
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role = $request->role;
+        $user->department = $request->department;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User account updated successfully.');
+    }
+
+    public function destroy(User $user)
+    {
+        if ($user->id === auth()->id()) {
+             return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');
+        }
+
+        $user->delete();
+        return redirect()->route('admin.users.index')->with('success', 'User account deleted successfully.');
+    }
 }

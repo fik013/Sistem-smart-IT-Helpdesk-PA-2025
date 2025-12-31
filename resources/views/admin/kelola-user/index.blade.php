@@ -150,13 +150,17 @@
                             <div class="text-xs">{{ $user->created_at->format('h:i A') }}</div>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <div class="flex justify-end gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                <button class="rounded-lg p-2 text-slate-400 dark:text-[#92a9c9] hover:bg-primary/20 hover:text-primary dark:hover:text-white transition-colors" title="Edit User">
+                            <div class="flex justify-end gap-2">
+                                <button onclick='openEditModal(@json($user))' class="rounded-lg p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300 transition-colors" title="Edit User">
                                     <span class="material-symbols-outlined text-[20px]">edit</span>
                                 </button>
-                                <button class="rounded-lg p-2 text-slate-400 dark:text-[#92a9c9] hover:bg-red-500/20 hover:text-red-500 dark:hover:text-red-400 transition-colors" title="Delete User">
-                                    <span class="material-symbols-outlined text-[20px]">delete</span>
-                                </button>
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="rounded-lg p-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 transition-colors" title="Delete User">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -175,7 +179,7 @@
     </div>
 </div>
 
-<!-- Create User Modal -->
+<!-- Create/Edit User Modal -->
 <div id="createUserModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <!-- Background overlay -->
@@ -184,8 +188,9 @@
         <!-- Modal panel -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
         <div class="inline-block align-bottom bg-white dark:bg-[#1a232e] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-slate-200 dark:border-[#233348]">
-            <form action="{{ route('admin.users.store') }}" method="POST">
+            <form id="userForm" action="{{ route('admin.users.store') }}" method="POST">
                 @csrf
+                <div id="methodField"></div>
                 <div class="bg-white dark:bg-[#1a232e] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <h3 class="text-lg leading-6 font-medium text-[#101822] dark:text-white mb-4" id="modal-title">Tambah Akun Baru</h3>
                     <div class="space-y-4">
@@ -204,12 +209,12 @@
                         <!-- Password -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label for="password" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Password</label>
-                                <input type="password" name="password" id="password" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                <label for="password" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Password <span id="password-optional" class="text-xs text-slate-400 hidden">(Optional)</span></label>
+                                <input type="password" name="password" id="password" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                             </div>
                             <div>
                                 <label for="password_confirmation" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Confirm Password</label>
-                                <input type="password" name="password_confirmation" id="password_confirmation" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                                <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                             </div>
                         </div>
 
@@ -235,7 +240,7 @@
                     </div>
                 </div>
                 <div class="bg-slate-50 dark:bg-[#111822] px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-200 dark:border-[#233348]">
-                    <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="submit" id="submitButton" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm">
                         Simpan Akun
                     </button>
                     <button type="button" onclick="closeModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-slate-300 dark:border-[#324867] shadow-sm px-4 py-2 bg-white dark:bg-[#1a232e] text-base font-medium text-slate-700 dark:text-[#92a9c9] hover:bg-slate-50 dark:hover:bg-[#111822] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
@@ -249,6 +254,46 @@
 
 <script>
     function openModal() {
+        document.getElementById('modal-title').innerText = 'Tambah Akun Baru';
+        document.getElementById('userForm').action = "{{ route('admin.users.store') }}";
+        document.getElementById('methodField').innerHTML = '';
+        document.getElementById('submitButton').innerText = 'Simpan Akun';
+        
+        // Reset fields
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('password_confirmation').value = '';
+        document.getElementById('role').value = 'employee';
+        document.getElementById('department').value = '';
+
+        // Password required for create
+        document.getElementById('password').required = true;
+        document.getElementById('password_confirmation').required = true;
+        document.getElementById('password-optional').classList.add('hidden');
+
+        document.getElementById('createUserModal').classList.remove('hidden');
+    }
+
+    function openEditModal(user) {
+        document.getElementById('modal-title').innerText = 'Edit Akun Pengguna';
+        document.getElementById('userForm').action = "{{ url('admin/kelola-akun') }}/" + user.id;
+        document.getElementById('methodField').innerHTML = '@method("PUT")';
+        document.getElementById('submitButton').innerText = 'Update Akun';
+
+        // Fill fields
+        document.getElementById('name').value = user.name;
+        document.getElementById('email').value = user.email;
+        document.getElementById('role').value = user.role;
+        document.getElementById('department').value = user.department || '';
+        
+        // Password optional for edit
+        document.getElementById('password').value = '';
+        document.getElementById('password_confirmation').value = '';
+        document.getElementById('password').required = false;
+        document.getElementById('password_confirmation').required = false;
+        document.getElementById('password-optional').classList.remove('hidden');
+
         document.getElementById('createUserModal').classList.remove('hidden');
     }
 

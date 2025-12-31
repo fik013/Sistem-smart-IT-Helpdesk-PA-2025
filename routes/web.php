@@ -57,6 +57,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/kelola-akun', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
         Route::post('/kelola-akun', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
+        Route::put('/kelola-akun/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
+        Route::delete('/kelola-akun/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
         Route::resource('faq', App\Http\Controllers\Admin\FaqController::class);
         Route::get('/prioritas-saw', [App\Http\Controllers\Admin\SawPriorityController::class, 'index'])->name('prioritas.index');
         Route::patch('criterias/{criteria}/toggle', [App\Http\Controllers\Admin\SawCriteriaController::class, 'toggleStatus'])->name('criterias.toggle');
