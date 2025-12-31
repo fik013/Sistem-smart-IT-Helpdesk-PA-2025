@@ -205,11 +205,24 @@
                             <label for="email" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Email Address</label>
                             <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                         </div>
-
+                        <!-- Password Info -->
+                        <div id="password-info" class="hidden rounded-md bg-blue-50 dark:bg-blue-900/20 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <span class="material-symbols-outlined text-blue-400">info</span>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-blue-800 dark:text-blue-200">Password Otomatis</h3>
+                                    <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
+                                        <p>Password akan dibuat secara otomatis dan dikirimkan ke alamat email pengguna di atas.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Password -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div id="password-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label for="password" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Password <span id="password-optional" class="text-xs text-slate-400 hidden">(Optional)</span></label>
+                                <label for="password" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Password</label>
                                 <input type="password" name="password" id="password" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                             </div>
                             <div>
@@ -251,13 +264,22 @@
         </div>
     </div>
 </div>
-
 <script>
+    // Store original options to reset when switching between modes
+    let originalDepartmentOptions = "";
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const deptSelect = document.getElementById('department');
+        if(deptSelect) {
+            originalDepartmentOptions = deptSelect.innerHTML;
+        }
+    });
+
     function openModal() {
         document.getElementById('modal-title').innerText = 'Tambah Akun Baru';
         document.getElementById('userForm').action = "{{ route('admin.users.store') }}";
         document.getElementById('methodField').innerHTML = '';
-        document.getElementById('submitButton').innerText = 'Simpan Akun';
+        document.getElementById('submitButton').innerText = 'Simpan & Kirim Email';
         
         // Reset fields
         document.getElementById('name').value = '';
@@ -265,12 +287,17 @@
         document.getElementById('password').value = '';
         document.getElementById('password_confirmation').value = '';
         document.getElementById('role').value = 'employee';
-        document.getElementById('department').value = '';
+        
+        // Reset department options and selection
+        const deptSelect = document.getElementById('department');
+        if(originalDepartmentOptions) deptSelect.innerHTML = originalDepartmentOptions;
+        deptSelect.value = '';
 
-        // Password required for create
-        document.getElementById('password').required = true;
-        document.getElementById('password_confirmation').required = true;
-        document.getElementById('password-optional').classList.add('hidden');
+        // Hide Password fields for Create (Auto-generated)
+        document.getElementById('password-container').classList.add('hidden');
+        document.getElementById('password-info').classList.remove('hidden');
+        document.getElementById('password').required = false;
+        document.getElementById('password_confirmation').required = false;
 
         document.getElementById('createUserModal').classList.remove('hidden');
     }
@@ -285,14 +312,47 @@
         document.getElementById('name').value = user.name;
         document.getElementById('email').value = user.email;
         document.getElementById('role').value = user.role;
-        document.getElementById('department').value = user.department || '';
         
-        // Password optional for edit
-        document.getElementById('password').value = '';
-        document.getElementById('password_confirmation').value = '';
+        // Handle department selection with fuzzy matching
+        const deptSelect = document.getElementById('department');
+        const userDept = user.department;
+        
+        // Reset options first
+        if(originalDepartmentOptions) deptSelect.innerHTML = originalDepartmentOptions;
+        
+        deptSelect.value = ""; // Reset value
+        
+        if (userDept) {
+            // Try direct assignment
+            deptSelect.value = userDept;
+            
+            // If literal match failed, try case-insensitive/trimmed match
+            if (deptSelect.value === "") {
+                for (let i = 0; i < deptSelect.options.length; i++) {
+                    const optValue = deptSelect.options[i].value;
+                    if (optValue && optValue.trim().toLowerCase() === userDept.trim().toLowerCase()) {
+                        deptSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+             // If still no match (custom text), append it
+             if (deptSelect.value === "" && userDept) {
+                 const newOption = document.createElement('option');
+                 newOption.value = userDept;
+                 newOption.text = userDept + " (Current)";
+                 newOption.selected = true;
+                 deptSelect.add(newOption);
+             }
+        }
+        
+        // Show Password fields for Edit (Optional reset)
+        document.getElementById('password-container').classList.remove('hidden');
+        document.getElementById('password-info').classList.add('hidden');
         document.getElementById('password').required = false;
         document.getElementById('password_confirmation').required = false;
-        document.getElementById('password-optional').classList.remove('hidden');
+        document.getElementById('password').value = '';
+        document.getElementById('password_confirmation').value = '';
 
         document.getElementById('createUserModal').classList.remove('hidden');
     }

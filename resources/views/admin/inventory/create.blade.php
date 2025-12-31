@@ -24,19 +24,64 @@
         <form action="{{ route('admin.inventory.store') }}" method="POST" class="flex flex-col gap-6">
             @csrf
             
-            <!-- User Selection -->
-            <div class="flex flex-col gap-2">
-                <label for="user_id" class="text-white text-sm font-medium">Pilih Pengguna</label>
-                <select name="user_id" id="user_id" class="w-full rounded-lg border border-[#324867] bg-[#111822] p-2.5 text-white placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all @error('user_id') border-red-500 @enderror">
-                    <option value="">-- Pilih Pengguna --</option>
-                    @foreach($users as $user)
-                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }} ({{ $user->email }})</option>
-                    @endforeach
-                </select>
-                @error('user_id')
-                    <p class="text-red-400 text-xs">{{ $message }}</p>
-                @enderror
+            <!-- Owner Selection -->
+            <div class="flex flex-col gap-4">
+                <label class="text-white text-sm font-medium">Jenis Pemilik Aset</label>
+                <div class="flex items-center gap-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="owner_type" value="user" class="w-4 h-4 text-primary bg-[#111822] border-slate-500 focus:ring-primary focus:ring-2" {{ old('owner_type', 'user') == 'user' ? 'checked' : '' }} onchange="toggleOwnerType()">
+                        <span class="text-white text-sm">Pegawai (Perorangan)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="owner_type" value="department" class="w-4 h-4 text-primary bg-[#111822] border-slate-500 focus:ring-primary focus:ring-2" {{ old('owner_type') == 'department' ? 'checked' : '' }} onchange="toggleOwnerType()">
+                        <span class="text-white text-sm">Departemen / Divisi</span>
+                    </label>
+                </div>
+
+                <!-- User Dropdown -->
+                <div id="user_select_container" class="flex flex-col gap-2 {{ old('owner_type', 'user') == 'department' ? 'hidden' : '' }}">
+                    <label for="user_id" class="text-white text-sm font-medium">Pilih Pegawai</label>
+                    <select name="user_id" id="user_id" class="w-full rounded-lg border border-[#324867] bg-[#111822] p-2.5 text-white placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all @error('user_id') border-red-500 @enderror">
+                        <option value="">-- Pilih Pegawai --</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }} ({{ $user->email }})</option>
+                        @endforeach
+                    </select>
+                    @error('user_id')
+                        <p class="text-red-400 text-xs">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Department Dropdown -->
+                <div id="department_select_container" class="flex flex-col gap-2 {{ old('owner_type', 'user') == 'user' ? 'hidden' : '' }}">
+                    <label for="department_id" class="text-white text-sm font-medium">Pilih Departemen</label>
+                    <select name="department_id" id="department_id" class="w-full rounded-lg border border-[#324867] bg-[#111822] p-2.5 text-white placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all @error('department_id') border-red-500 @enderror">
+                        <option value="">-- Pilih Departemen --</option>
+                        @foreach($departments as $dept)
+                            <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('department_id')
+                        <p class="text-red-400 text-xs">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
+
+            <script>
+                function toggleOwnerType() {
+                    const type = document.querySelector('input[name="owner_type"]:checked').value;
+                    const userContainer = document.getElementById('user_select_container');
+                    const deptContainer = document.getElementById('department_select_container');
+                    
+                    if (type === 'user') {
+                        userContainer.classList.remove('hidden');
+                        deptContainer.classList.add('hidden');
+                    } else {
+                        userContainer.classList.add('hidden');
+                        deptContainer.classList.remove('hidden');
+                    }
+                }
+            </script>
 
             <!-- Asset Category Selection -->
             <div class="flex flex-col gap-2">

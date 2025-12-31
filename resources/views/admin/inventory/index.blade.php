@@ -53,10 +53,22 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="h-6 w-6 rounded-full bg-cover bg-center border border-slate-200 dark:border-transparent" style='background-image: url("https://ui-avatars.com/api/?name={{ urlencode($item->user->name ?? 'Unassigned') }}&size=24");'></div>
-                                <span class="text-[#101822] dark:text-white">{{ $item->user->name ?? 'Unassigned' }}</span>
-                            </div>
+                            @if($item->department)
+                                <div class="flex items-center gap-2">
+                                    <div class="h-6 w-6 flex items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
+                                        <span class="material-symbols-outlined text-[16px]">domain</span>
+                                    </div>
+                                    <span class="text-[#101822] dark:text-white">{{ $item->department->name }}</span>
+                                    <span class="text-xs text-slate-400 dark:text-[#92a9c9]">(Dept)</span>
+                                </div>
+                            @elseif($item->user)
+                                <div class="flex items-center gap-2">
+                                    <div class="h-6 w-6 rounded-full bg-cover bg-center border border-slate-200 dark:border-transparent" style='background-image: url("https://ui-avatars.com/api/?name={{ urlencode($item->user->name) }}&size=24");'></div>
+                                    <span class="text-[#101822] dark:text-white">{{ $item->user->name }}</span>
+                                </div>
+                            @else
+                                <span class="text-slate-400 dark:text-[#92a9c9] italic">Unassigned</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium border

@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserAccountCreated;
+
 class UserController extends Controller
 {
     public function index(Request $request)
@@ -42,20 +46,29 @@ class UserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:admin,employee'],
             'department' => ['nullable', 'string', 'max:255'],
         ]);
 
-        User::create([
+        $rawPassword = Str::random(10);
+
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($rawPassword),
             'role' => $request->role,
             'department' => $request->department,
         ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'User account created successfully.');
+        // Kirim email kredensial ke user
+        try {
+            Mail::to($user)->send(new UserAccountCreated($user, $rawPassword));
+            $message = 'User account created successfully and credentials sent to email.';
+        } catch (\Exception $e) {
+            $message = 'User account created but failed to send email: ' . $e->getMessage();
+        }
+
+        return redirect()->route('admin.users.index')->with('success', $message);
     }
     public function update(Request $request, User $user)
     {
