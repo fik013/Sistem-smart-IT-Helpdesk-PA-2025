@@ -24,40 +24,33 @@
                         @error('subject') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
                     
-                    <!-- Category & Device (Two Columns) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col gap-2">
-                            <label class="text-white text-sm font-semibold leading-normal">Kategori</label>
-                            <div class="relative">
-                                <select name="category" class="form-select flex w-full appearance-none rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-[#192433] h-14 placeholder:text-slate-500 px-4 pr-10 text-base font-normal transition-all cursor-pointer">
-                                    <option value="" disabled selected>Pilih Kategori</option>
-                                    <option value="hardware">Hardware (Perangkat Keras)</option>
-                                    <option value="software">Software (Aplikasi)</option>
-                                    <option value="network">Jaringan / Internet</option>
-                                    <option value="account">Akun & Akses</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                                    <span class="material-symbols-outlined">expand_more</span>
-                                </div>
+                    <!-- Asset Selection -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-white text-sm font-semibold leading-normal">Pilih Aset (Opsional)</label>
+                        <div class="relative">
+                            <select name="inventory_id" class="form-select flex w-full appearance-none rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-[#192433] h-14 placeholder:text-slate-500 px-4 pr-10 text-base font-normal transition-all cursor-pointer">
+                                <option value="" selected>Tidak ada aset spesifik / Umum</option>
+                                @foreach($inventories as $inventory)
+                                    <option value="{{ $inventory->id }}">{{ $inventory->name }} ({{ $inventory->type }})</option>
+                                @endforeach
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                <span class="material-symbols-outlined">expand_more</span>
                             </div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label class="text-white text-sm font-semibold leading-normal">Aset / Perangkat (Opsional)</label>
-                            <input type="text" name="asset_id" class="form-input flex w-full rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-[#192433] h-14 placeholder:text-slate-500 px-4 text-base font-normal transition-all" placeholder="ID Aset (cth: LT-2049)" />
                         </div>
                     </div>
 
-                    <!-- Priority Section (Visual Only unless backend supports it) -->
+                    <!-- Urgency/Priority Section -->
                     <div class="flex flex-col gap-3 pt-2">
-                        <h2 class="text-white text-sm font-semibold leading-normal">Prioritas</h2>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            @foreach(['low' => ['Rendah', 'low_priority', 'green'], 'medium' => ['Sedang', 'equalizer', 'blue'], 'high' => ['Tinggi', 'priority_high', 'orange'], 'critical' => ['Kritis', 'warning', 'red']] as $key => $data)
+                        <h2 class="text-white text-sm font-semibold leading-normal">Tingkat Urgensi</h2>
+                        <div class="grid grid-cols-3 gap-4">
+                            @foreach(['low' => ['Rendah', 'low_priority', 'green'], 'medium' => ['Sedang', 'equalizer', 'blue'], 'high' => ['Tinggi', 'priority_high', 'red']] as $key => $data)
                             <label class="cursor-pointer group">
-                                <input type="radio" name="priority" value="{{ $key }}" class="peer sr-only radio-card" {{ $key == 'medium' ? 'checked' : '' }}/>
-                                <div class="h-full rounded-lg border border-slate-700 bg-[#192433] p-3 flex flex-col items-center justify-center gap-2 hover:border-slate-500 transition-all 
+                                <input type="radio" name="urgency" value="{{ $key }}" class="peer sr-only radio-card" {{ $key == 'low' ? 'checked' : '' }}/>
+                                <div class="h-full rounded-lg border border-slate-700 bg-[#192433] p-4 flex flex-col items-center justify-center gap-3 hover:border-slate-500 transition-all 
                                      peer-checked:bg-{{ $data[2] }}-900/20 peer-checked:border-{{ $data[2] }}-500 peer-checked:text-{{ $data[2] }}-500">
-                                    <span class="material-symbols-outlined text-{{ $data[2] }}-500">{{ $data[1] }}</span>
-                                    <span class="text-sm font-medium">{{ $data[0] }}</span>
+                                    <span class="material-symbols-outlined text-3xl text-{{ $data[2] }}-500 group-hover:scale-110 transition-transform">{{ $data[1] }}</span>
+                                    <span class="text-sm font-bold">{{ $data[0] }}</span>
                                 </div>
                             </label>
                             @endforeach

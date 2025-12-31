@@ -192,17 +192,45 @@
                 </div>
             </div>
 
-            <!-- System Status / Maintenance -->
+            <!-- Announcements -->
             @if($announcements->count() > 0)
-            <div class="bg-gradient-to-br from-[#233348] to-[#101822] rounded-xl border border-[#324867] p-5 text-white">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="material-symbols-outlined text-blue-400">info</span>
-                    <h4 class="font-bold text-sm">Pengumuman</h4>
+            <div class="flex flex-col gap-3">
+                 <div class="flex items-center justify-between px-1">
+                    <h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Pengumuman</h3>
                 </div>
                 @foreach($announcements as $announcement)
-                    <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                <div class="rounded-xl border p-4 shadow-sm relative overflow-hidden
+                    {{ $announcement->type == 'critical' ? 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-500/30' : 
+                       ($announcement->type == 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-500/30' : 
+                       'bg-white dark:bg-[#1e293b] border-slate-200 dark:border-[#324867]') }}">
+                    
+                    @if($announcement->type == 'critical')
+                        <div class="absolute top-0 right-0 p-2 opacity-10">
+                            <span class="material-symbols-outlined text-6xl text-red-500">warning</span>
+                        </div>
+                    @endif
+
+                    <div class="flex items-start justify-between mb-2 relative z-10">
+                        <div class="flex items-center gap-2">
+                            @if($announcement->type == 'critical')
+                                <span class="material-symbols-outlined text-red-500 text-base">error</span>
+                                <span class="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">Penting</span>
+                            @elseif($announcement->type == 'warning')
+                                <span class="material-symbols-outlined text-yellow-500 text-base">warning</span>
+                                <span class="text-xs font-bold text-yellow-600 dark:text-yellow-400 uppercase tracking-wider">Perhatian</span>
+                            @else
+                                <span class="material-symbols-outlined text-blue-500 text-base">info</span>
+                                <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Info</span>
+                            @endif
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-mono">{{ $announcement->created_at->format('d M') }}</span>
+                    </div>
+                    
+                    <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1 relative z-10">{{ $announcement->title }}</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed relative z-10">
                         {{ $announcement->content }}
                     </p>
+                </div>
                 @endforeach
             </div>
             @endif

@@ -12,6 +12,7 @@ class Inventory extends Model
 
     protected $fillable = [
         'user_id',
+        'asset_category_id',
         'item_name',
         'description',
         'serial_number',
@@ -21,5 +22,10 @@ class Inventory extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(AssetCategory::class, 'asset_category_id');
     }
 }

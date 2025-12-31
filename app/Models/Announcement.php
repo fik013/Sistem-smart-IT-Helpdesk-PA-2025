@@ -12,6 +12,29 @@ class Announcement extends Model
     protected $fillable = [
         'title',
         'content',
+        'type',
         'is_active',
+        'start_date',
+        'end_date',
     ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+    ];
+
+    // Helper to get only currently active announcements
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true)
+                     ->where(function ($q) {
+                         $q->whereNull('start_date')
+                           ->orWhere('start_date', '<=', now());
+                     })
+                     ->where(function ($q) {
+                         $q->whereNull('end_date')
+                           ->orWhere('end_date', '>=', now());
+                     });
+    }
 }

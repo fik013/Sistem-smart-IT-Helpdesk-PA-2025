@@ -6,6 +6,8 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Services\SawService;
+
 class TicketController extends Controller
 {
     public function index()
@@ -15,8 +17,8 @@ class TicketController extends Controller
         
         $stats = [
             'total' => $user->tickets()->count(),
-            'open' => $user->tickets()->where('status', 'pending')->count(), // 'open' usually mapped to pending or open
-            'processing' => $user->tickets()->where('status', 'in_progress')->count(),
+            'open' => $user->tickets()->where('status', 'pending')->count(),
+            'processing' => $user->tickets()->where('status', 'processing')->count(), // changed from in_progress to processing matching enum
             'completed' => $user->tickets()->where('status', 'completed')->count(),
         ];
         
@@ -25,14 +27,17 @@ class TicketController extends Controller
 
     public function create()
     {
-        return view('user.tickets.create');
+        $inventories = Auth::user()->inventories;
+        return view('user.tickets.create', compact('inventories'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, SawService $sawService)
     {
         $validated = $request->validate([
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
+            'inventory_id' => 'nullable|exists:inventories,id',
+            'urgency' => 'required|in:low,medium,high',
             'evidence' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]);
 
@@ -41,13 +46,19 @@ class TicketController extends Controller
             $path = $request->file('evidence')->store('evidence', 'public');
         }
 
-        Auth::user()->tickets()->create([
+        $ticket = Auth::user()->tickets()->create([
             'subject' => $validated['subject'],
             'description' => $validated['description'],
+            'inventory_id' => $validated['inventory_id'] ?? null,
+            'urgency' => $validated['urgency'],
             'evidence_path' => $path,
             'status' => 'pending'
         ]);
 
-        return redirect()->route('user.dashboard')->with('success', 'Ticket created successfully!');
+        // Calculate SAW Score
+        $score = $sawService->calculateScore($ticket);
+        $ticket->update(['saw_score' => $score]);
+
+        return redirect()->route('tickets.index')->with('success', 'Ticket created successfully!');
     }
 }

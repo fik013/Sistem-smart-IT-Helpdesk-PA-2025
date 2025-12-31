@@ -20,10 +20,18 @@
                 <span class="material-symbols-outlined {{ request()->routeIs('admin.inventory.*') ? 'text-primary fill-1' : 'group-hover:text-[#101822] dark:group-hover:text-white transition-colors' }}">inventory_2</span>
                 <p class="text-sm font-medium leading-normal">Asset Management</p>
             </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg {{ request()->routeIs('admin.asset-categories.*') ? 'bg-primary/10 dark:bg-primary/20 text-primary dark:text-white border border-primary/20' : 'text-slate-500 dark:text-[#92a9c9] hover:bg-slate-100 dark:hover:bg-[#233348] hover:text-[#101822] dark:hover:text-white transition-colors group' }}" href="{{ route('admin.asset-categories.index') }}">
+                <span class="material-symbols-outlined {{ request()->routeIs('admin.asset-categories.*') ? 'text-primary fill-1' : 'group-hover:text-[#101822] dark:group-hover:text-white transition-colors' }}">category</span>
+                <p class="text-sm font-medium leading-normal">Kategori Aset</p>
+            </a>
             <!-- Active State Check -->
             <a class="flex items-center gap-3 px-3 py-2 rounded-lg {{ request()->routeIs('admin.users.*') ? 'bg-primary/10 dark:bg-primary/20 text-primary dark:text-white border border-primary/20' : 'text-slate-500 dark:text-[#92a9c9] hover:bg-slate-100 dark:hover:bg-[#233348] hover:text-[#101822] dark:hover:text-white transition-colors group' }}" href="{{ route('admin.users.index') }}">
                 <span class="material-symbols-outlined {{ request()->routeIs('admin.users.*') ? 'text-primary fill-1' : 'group-hover:text-[#101822] dark:group-hover:text-white transition-colors' }}">group</span>
                 <p class="text-sm font-medium leading-normal">Kelola Akun</p>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg {{ request()->routeIs('admin.departments.*') ? 'bg-primary/10 dark:bg-primary/20 text-primary dark:text-white border border-primary/20' : 'text-slate-500 dark:text-[#92a9c9] hover:bg-slate-100 dark:hover:bg-[#233348] hover:text-[#101822] dark:hover:text-white transition-colors group' }}" href="{{ route('admin.departments.index') }}">
+                <span class="material-symbols-outlined {{ request()->routeIs('admin.departments.*') ? 'text-primary fill-1' : 'group-hover:text-[#101822] dark:group-hover:text-white transition-colors' }}">work</span>
+                <p class="text-sm font-medium leading-normal">Kelola Jabatan</p>
             </a>
             <a class="flex items-center gap-3 px-3 py-2 rounded-lg {{ request()->routeIs('admin.faq.*') ? 'bg-primary/10 dark:bg-primary/20 text-primary dark:text-white border border-primary/20' : 'text-slate-500 dark:text-[#92a9c9] hover:bg-slate-100 dark:hover:bg-[#233348] hover:text-[#101822] dark:hover:text-white transition-colors group' }}" href="{{ route('admin.faq.index') }}">
                 <span class="material-symbols-outlined {{ request()->routeIs('admin.faq.*') ? 'text-primary fill-1' : 'group-hover:text-[#101822] dark:group-hover:text-white transition-colors' }}">help</span>
@@ -39,9 +47,9 @@
                     <p class="text-sm font-medium leading-normal">Prioritas SAW</p>
                 </a>
             </div>
-            <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-[#92a9c9] hover:bg-slate-100 dark:hover:bg-[#233348] hover:text-[#101822] dark:hover:text-white transition-colors group" href="#">
-                <span class="material-symbols-outlined group-hover:text-[#101822] dark:group-hover:text-white transition-colors">tune</span>
-                <p class="text-sm font-medium leading-normal">Settings</p>
+            <a class="flex items-center gap-3 px-3 py-2 rounded-lg {{ request()->routeIs('admin.announcements.*') ? 'bg-primary/10 dark:bg-primary/20 text-primary dark:text-white border border-primary/20' : 'text-slate-500 dark:text-[#92a9c9] hover:bg-slate-100 dark:hover:bg-[#233348] hover:text-[#101822] dark:hover:text-white transition-colors group' }}" href="{{ route('admin.announcements.index') }}">
+                <span class="material-symbols-outlined {{ request()->routeIs('admin.announcements.*') ? 'text-primary fill-1' : 'group-hover:text-[#101822] dark:group-hover:text-white transition-colors' }}">campaign</span>
+                <p class="text-sm font-medium leading-normal">Kelola Pengumuman</p>
             </a>
         </div>
     </div>

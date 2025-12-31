@@ -65,6 +65,41 @@
             </div>
         </div>
 
+        <!-- Active Announcements -->
+        @if($announcements->count() > 0)
+        <div class="rounded-xl border border-slate-200 dark:border-[#233348] p-5 bg-white dark:bg-[#1a232e]">
+            <h3 class="text-[#101822] dark:text-white text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">campaign</span>
+                Pengumuman Aktif
+            </h3>
+            <div class="space-y-3">
+                @foreach($announcements as $announce)
+                <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between p-4 rounded-lg bg-slate-50 dark:bg-[#111822] border-l-4 {{ $announce->type == 'critical' ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : ($announce->type == 'warning' ? 'border-yellow-500' : 'border-blue-500') }}">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-2">
+                             @if($announce->type == 'critical')
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400">Penting</span>
+                             @elseif($announce->type == 'warning')
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400">Sedang</span>
+                             @else
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400">Info</span>
+                             @endif
+                             <h4 class="font-bold text-[#101822] dark:text-white text-sm">{{ $announce->title }}</h4>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-[#92a9c9] line-clamp-2 md:line-clamp-1">{{ Str::limit($announce->content, 100) }}</p>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs text-slate-400 dark:text-[#64748b] shrink-0">
+                         @if($announce->end_date)
+                            <span title="Berakhir pada"><span class="material-symbols-outlined md-14 align-text-bottom text-[14px]">event_busy</span> {{ $announce->end_date->format('d M H:i') }}</span>
+                         @endif
+                         <span><span class="material-symbols-outlined md-14 align-text-bottom text-[14px]">schedule</span> {{ $announce->created_at->diffForHumans() }}</span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
         <!-- Chart Section -->
         <div class="rounded-xl border border-slate-200 dark:border-[#233348] p-5 bg-white dark:bg-[#1a232e]">
             <h3 class="text-[#101822] dark:text-white text-lg font-bold mb-4">Ticket Analytics</h3>

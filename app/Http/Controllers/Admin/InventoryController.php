@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\AssetCategory;
 
 class InventoryController extends Controller
 {
@@ -14,7 +13,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        $inventories = Inventory::with('user')->latest()->paginate(10);
+        $inventories = Inventory::with(['user', 'category'])->latest()->paginate(10);
         return view('admin.inventory.index', compact('inventories'));
     }
 
@@ -24,7 +23,8 @@ class InventoryController extends Controller
     public function create()
     {
         $users = User::all();
-        return view('admin.inventory.create', compact('users'));
+        $categories = AssetCategory::all();
+        return view('admin.inventory.create', compact('users', 'categories'));
     }
 
     /**
@@ -34,6 +34,7 @@ class InventoryController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
+            'asset_category_id' => 'required|exists:asset_categories,id',
             'item_name' => 'required|string|max:255',
             'serial_number' => 'nullable|string|max:255',
             'description' => 'nullable|string',
@@ -51,7 +52,8 @@ class InventoryController extends Controller
     public function edit(Inventory $inventory)
     {
         $users = User::all();
-        return view('admin.inventory.edit', compact('inventory', 'users'));
+        $categories = AssetCategory::all();
+        return view('admin.inventory.edit', compact('inventory', 'users', 'categories'));
     }
 
     /**
@@ -61,6 +63,7 @@ class InventoryController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
+            'asset_category_id' => 'required|exists:asset_categories,id',
             'item_name' => 'required|string|max:255',
             'serial_number' => 'nullable|string|max:255',
             'description' => 'nullable|string',

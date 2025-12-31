@@ -70,21 +70,28 @@
         </div>
     </div>
     <!-- Filters & Toolbar -->
-    <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white dark:bg-[#1a232e] p-4 rounded-xl border border-slate-200 dark:border-[#233348]">
+    <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white dark:bg-[#1a232e] p-4 rounded-xl border border-slate-200 dark:border-[#233348]">
         <div class="relative w-full md:w-96">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 dark:text-[#92a9c9]">
                 <span class="material-symbols-outlined">search</span>
             </div>
-            <input class="block w-full rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] p-2.5 pl-10 text-sm text-[#101822] dark:text-white placeholder-slate-400 dark:placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all" placeholder="Search by name, email, or role..." type="text"/>
+            <input name="search" value="{{ request('search') }}" class="block w-full rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] p-2.5 pl-10 text-sm text-[#101822] dark:text-white placeholder-slate-400 dark:placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all" placeholder="Search by name or email..." type="text"/>
         </div>
         <div class="flex w-full md:w-auto gap-3">
-            <select class="rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] py-2 px-4 text-sm text-[#101822] dark:text-white focus:border-primary focus:ring-primary focus:outline-none">
-                <option value="">All Roles</option>
-                <option value="admin">Administrator</option>
-                <option value="employee">Employee</option>
+             <select name="department" onchange="this.form.submit()" class="rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] py-2 px-4 text-sm text-[#101822] dark:text-white focus:border-primary focus:ring-primary focus:outline-none">
+                <option value="">Semua Jabatan</option>
+                @foreach($departments as $dept)
+                    <option value="{{ $dept->name }}" {{ request('department') == $dept->name ? 'selected' : '' }}>{{ $dept->name }}</option>
+                @endforeach
             </select>
+            <select name="role" onchange="this.form.submit()" class="rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] py-2 px-4 text-sm text-[#101822] dark:text-white focus:border-primary focus:ring-primary focus:outline-none">
+                <option value="">Semua Role</option>
+                <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrator</option>
+                <option value="employee" {{ request('role') == 'employee' ? 'selected' : '' }}>Employee</option>
+            </select>
+            <button type="submit" class="hidden">Search</button>
         </div>
-    </div>
+    </form>
     <!-- Data Table -->
     <div class="rounded-xl border border-slate-200 dark:border-[#233348] overflow-hidden bg-white dark:bg-[#1a232e]">
         <div class="overflow-x-auto">
@@ -112,7 +119,13 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            {{ $user->department ?? '-' }}
+                            @if($user->department)
+                                <span class="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-900/30 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-400 ring-1 ring-inset ring-purple-700/10 dark:ring-purple-700/30">
+                                    {{ $user->department }}
+                                </span>
+                            @else
+                                <span class="text-slate-400">-</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium border

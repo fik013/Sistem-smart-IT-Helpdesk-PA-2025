@@ -20,7 +20,8 @@ class AdminDashboardController extends Controller
         ];
         
         $recentTickets = Ticket::with('user')->latest()->take(5)->get();
+        $announcements = \App\Models\Announcement::active()->latest()->get();
 
-        return view('admin.dashboard', compact('stats', 'recentTickets'));
+        return view('admin.dashboard', compact('stats', 'recentTickets', 'announcements'));
     }
 }

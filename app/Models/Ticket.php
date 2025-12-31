@@ -12,13 +12,21 @@ class Ticket extends Model
 
     protected $fillable = [
         'user_id',
+        'inventory_id',
         'subject',
         'description',
         'status',
+        'urgency',
+        'saw_score',
         'evidence_path',
         'admin_response',
         'admin_evidence_path',
     ];
+
+    public function inventory(): BelongsTo
+    {
+        return $this->belongsTo(Inventory::class);
+    }
 
     public function user(): BelongsTo
     {

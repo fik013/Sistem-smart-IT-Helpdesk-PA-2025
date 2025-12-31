@@ -39,6 +39,20 @@
                 @enderror
             </div>
 
+            <!-- Asset Category Selection -->
+            <div class="flex flex-col gap-2">
+                <label for="asset_category_id" class="text-white text-sm font-medium">Kategori Aset</label>
+                <select name="asset_category_id" id="asset_category_id" class="w-full rounded-lg border border-[#324867] bg-[#111822] p-2.5 text-white placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all @error('asset_category_id') border-red-500 @enderror">
+                    <option value="">-- Pilih Kategori --</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ old('asset_category_id', $inventory->asset_category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                @error('asset_category_id')
+                    <p class="text-red-400 text-xs">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Item Name -->
             <div class="flex flex-col gap-2">
                 <label for="item_name" class="text-white text-sm font-medium">Nama Barang</label>

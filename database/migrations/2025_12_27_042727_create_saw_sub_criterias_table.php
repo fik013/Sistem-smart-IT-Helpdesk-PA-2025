@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('saw_criterias', function (Blueprint $table) {
+        Schema::create('saw_sub_criterias', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique(); // C1, C2, etc
+            $table->foreignId('saw_criteria_id')->constrained('saw_criterias')->onDelete('cascade');
             $table->string('name');
-            $table->enum('attribute', ['benefit', 'cost']);
             $table->decimal('weight', 5, 2);
             $table->timestamps();
         });
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('saw_criterias');
+        Schema::dropIfExists('saw_sub_criterias');
     }
 };
