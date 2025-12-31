@@ -30,8 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/kelola-akun', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+        Route::post('/kelola-akun', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
         Route::resource('faq', App\Http\Controllers\Admin\FaqController::class);
         Route::get('/prioritas-saw', [App\Http\Controllers\Admin\SawPriorityController::class, 'index'])->name('prioritas.index');
+        Route::resource('departments', App\Http\Controllers\Admin\DepartmentController::class)->except(['create', 'edit', 'show']);
         Route::resource('inventory', App\Http\Controllers\Admin\InventoryController::class);
         Route::resource('tickets', App\Http\Controllers\Admin\TicketController::class)->only(['index', 'show', 'update']);
         Route::get('/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');

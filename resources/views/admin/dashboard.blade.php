@@ -6,81 +6,81 @@
     <div class="flex flex-col gap-6 p-4 md:p-8 max-w-[1200px] mx-auto">
         <!-- Breadcrumbs -->
         <div class="flex flex-wrap gap-2 text-sm">
-            <span class="text-white font-medium">Dashboard</span>
+            <span class="text-[#101822] dark:text-white font-medium">Dashboard</span>
         </div>
         
         <!-- Page Heading & Actions -->
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div class="flex flex-col gap-2">
-                <h1 class="text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Admin Dashboard</h1>
-                <p class="text-[#92a9c9] text-base font-normal">Overview of system performance and tickets.</p>
+                <h1 class="text-[#101822] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Admin Dashboard</h1>
+                <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Overview of system performance and tickets.</p>
             </div>
         </div>
 
         <!-- Stats Overview -->
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <!-- Total Users -->
-            <div class="flex flex-col gap-2 rounded-xl p-5 border border-[#233348] bg-[#1a232e]">
+            <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
                 <div class="flex justify-between items-start">
-                    <p class="text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Users</p>
-                    <span class="material-symbols-outlined text-[#92a9c9]">group</span>
+                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Users</p>
+                    <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">group</span>
                 </div>
                 <div class="flex items-baseline gap-2">
-                    <p class="text-white text-3xl font-bold">{{ $stats['total_users'] }}</p>
+                    <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ $stats['total_users'] }}</p>
                 </div>
             </div>
             
             <!-- Total Tickets -->
-            <div class="flex flex-col gap-2 rounded-xl p-5 border border-[#233348] bg-[#1a232e]">
+            <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
                 <div class="flex justify-between items-start">
-                    <p class="text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Tickets</p>
-                    <span class="material-symbols-outlined text-[#92a9c9]">confirmation_number</span>
+                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Tickets</p>
+                    <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">confirmation_number</span>
                 </div>
                 <div class="flex items-baseline gap-2">
-                    <p class="text-white text-3xl font-bold">{{ $stats['total_tickets'] }}</p>
+                    <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ $stats['total_tickets'] }}</p>
                 </div>
             </div>
 
             <!-- Pending Tickets -->
-            <div class="flex flex-col gap-2 rounded-xl p-5 border border-[#233348] bg-[#1a232e]">
+            <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
                 <div class="flex justify-between items-start">
-                    <p class="text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Pending</p>
+                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Pending</p>
                     <span class="material-symbols-outlined text-yellow-500">pending_actions</span>
                 </div>
                 <div class="flex items-baseline gap-2">
-                    <p class="text-white text-3xl font-bold">{{ $stats['pending_tickets'] }}</p>
+                    <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ $stats['pending_tickets'] }}</p>
                     <p class="text-yellow-500 text-sm font-medium">Action Needed</p>
                 </div>
             </div>
 
             <!-- Inventory -->
-            <div class="flex flex-col gap-2 rounded-xl p-5 border border-[#233348] bg-[#1a232e]">
+            <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
                 <div class="flex justify-between items-start">
-                    <p class="text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Inventory</p>
-                    <span class="material-symbols-outlined text-[#92a9c9]">inventory_2</span>
+                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Inventory</p>
+                    <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">inventory_2</span>
                 </div>
                 <div class="flex items-baseline gap-2">
-                    <p class="text-white text-3xl font-bold">{{ $stats['total_inventory'] }}</p>
+                    <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ $stats['total_inventory'] }}</p>
                 </div>
             </div>
         </div>
 
         <!-- Chart Section -->
-        <div class="rounded-xl border border-[#233348] p-5 bg-[#1a232e]">
-            <h3 class="text-white text-lg font-bold mb-4">Ticket Analytics</h3>
+        <div class="rounded-xl border border-slate-200 dark:border-[#233348] p-5 bg-white dark:bg-[#1a232e]">
+            <h3 class="text-[#101822] dark:text-white text-lg font-bold mb-4">Ticket Analytics</h3>
             <div class="w-full h-64">
                 <canvas id="ticketChart"></canvas>
             </div>
         </div>
 
         <!-- Recent Tickets Table -->
-        <div class="rounded-xl border border-[#233348] overflow-hidden bg-[#1a232e]">
-            <div class="p-4 border-b border-[#233348]">
-                <h3 class="text-white text-lg font-bold">Recent Tickets</h3>
+        <div class="rounded-xl border border-slate-200 dark:border-[#233348] overflow-hidden bg-white dark:bg-[#1a232e]">
+            <div class="p-4 border-b border-slate-200 dark:border-[#233348]">
+                <h3 class="text-[#101822] dark:text-white text-lg font-bold">Recent Tickets</h3>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-[#92a9c9]">
-                    <thead class="bg-[#233348] text-xs uppercase text-white font-semibold">
+                <table class="w-full text-left text-sm text-slate-500 dark:text-[#92a9c9]">
+                    <thead class="bg-slate-100 dark:bg-[#233348] text-xs uppercase text-[#101822] dark:text-white font-semibold">
                         <tr>
                             <th class="px-6 py-4">Subject</th>
                             <th class="px-6 py-4">User</th>
@@ -89,21 +89,21 @@
                             <th class="px-6 py-4 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-[#233348]">
+                    <tbody class="divide-y divide-slate-200 dark:divide-[#233348]">
                         @foreach($recentTickets as $ticket)
-                        <tr class="hover:bg-[#233348]/50 transition-colors group">
-                            <td class="px-6 py-4 text-white font-medium">{{ $ticket->subject }}</td>
+                        <tr class="hover:bg-slate-50 dark:hover:bg-[#233348]/50 transition-colors group">
+                            <td class="px-6 py-4 text-[#101822] dark:text-white font-medium">{{ $ticket->subject }}</td>
                             <td class="px-6 py-4">{{ $ticket->user->name }}</td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium border
-                                    {{ $ticket->status == 'pending' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' : 
-                                       ($ticket->status == 'completed' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-blue-500/10 text-blue-500 border-blue-500/20') }}">
+                                    {{ $ticket->status == 'pending' ? 'bg-yellow-50 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border-yellow-200 dark:border-yellow-500/20' : 
+                                       ($ticket->status == 'completed' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-500 border-emerald-200 dark:border-emerald-500/20' : 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-500 border-blue-200 dark:border-blue-500/20') }}">
                                     {{ ucfirst($ticket->status) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">{{ $ticket->created_at->diffForHumans() }}</td>
                             <td class="px-6 py-4 text-right">
-                                <button class="text-primary hover:text-white transition-colors font-medium text-sm">Manage</button>
+                                <a href="{{ route('admin.tickets.show', $ticket) }}" class="text-primary hover:text-blue-700 dark:hover:text-white transition-colors font-medium text-sm">Manage</a>
                             </td>
                         </tr>
                         @endforeach
@@ -117,7 +117,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('ticketChart').getContext('2d');
-        new Chart(ctx, {
+        
+        // Function to get colors based on theme
+        function getChartColors() {
+            const isDark = document.documentElement.classList.contains('dark');
+            return {
+                grid: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                ticks: isDark ? '#92a9c9' : '#64748b',
+                text: isDark ? '#ffffff' : '#101822'
+            };
+        }
+
+        let chartColors = getChartColors();
+
+        const ticketChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['Pending', 'Processing', 'Completed'],
@@ -133,12 +146,39 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#92a9c9' } },
-                    x: { grid: { display: false }, ticks: { color: '#92a9c9' } }
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: chartColors.grid }, 
+                        ticks: { color: chartColors.ticks } 
+                    },
+                    x: { 
+                        grid: { display: false }, 
+                        ticks: { color: chartColors.ticks } 
+                    }
                 },
-                plugins: { legend: { labels: { color: '#ffffff' } } }
+                plugins: { 
+                    legend: { 
+                        labels: { color: chartColors.text } 
+                    } 
+                }
             }
         });
+
+        // Listen for theme changes to update chart
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    const newColors = getChartColors();
+                    ticketChart.options.scales.y.grid.color = newColors.grid;
+                    ticketChart.options.scales.y.ticks.color = newColors.ticks;
+                    ticketChart.options.scales.x.ticks.color = newColors.ticks;
+                    ticketChart.options.plugins.legend.labels.color = newColors.text;
+                    ticketChart.update();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, { attributes: true });
     </script>
     @endpush
 @endsection
