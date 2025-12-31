@@ -37,6 +37,7 @@
                 <thead class="bg-slate-50 dark:bg-[#111822] border-b border-slate-200 dark:border-[#324867]">
                     <tr>
                         <th class="px-6 py-4 font-semibold text-slate-900 dark:text-white" scope="col">Nama Kategori</th>
+                        <th class="px-6 py-4 font-semibold text-slate-900 dark:text-white" scope="col">Bobot</th>
                         <th class="px-6 py-4 font-semibold text-slate-900 dark:text-white" scope="col">Deskripsi</th>
                         <th class="px-6 py-4 font-semibold text-slate-900 dark:text-white" scope="col">Jumlah Aset</th>
                         <th class="px-6 py-4 font-semibold text-slate-900 dark:text-white text-right" scope="col">Aksi</th>
@@ -47,6 +48,9 @@
                     <tr class="group hover:bg-slate-50 dark:hover:bg-[#253246] transition-colors">
                         <td class="px-6 py-4">
                             <div class="font-medium text-slate-900 dark:text-white">{{ $category->name }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-xs font-medium text-primary ring-1 ring-inset ring-blue-700/10 dark:ring-blue-700/30">{{ number_format($category->weight, 2) }}</span>
                         </td>
                         <td class="px-6 py-4 text-slate-500 dark:text-slate-400">
                             {{ $category->description ?? '-' }}
@@ -71,7 +75,7 @@
                     </tr>
                     @empty
                     <tr>
-                         <td colspan="4" class="px-6 py-4 text-center text-slate-500 dark:text-slate-400">Belum ada kategori aset.</td>
+                         <td colspan="5" class="px-6 py-4 text-center text-slate-500 dark:text-slate-400">Belum ada kategori aset.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -96,6 +100,11 @@
                         <div>
                             <label for="name" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Nama Kategori</label>
                             <input type="text" name="name" id="name" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="weight" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Bobot (Weight)</label>
+                            <input type="number" step="0.01" min="0" max="1" name="weight" id="weight" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Contoh: 0.25">
+                            <p class="mt-1 text-xs text-slate-500">Nilai bobot untuk kriteria Jenis Aset (SAW).</p>
                         </div>
                         <div>
                             <label for="description" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Deskripsi</label>
@@ -128,6 +137,10 @@
                             <input type="text" name="name" id="edit_name" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                         </div>
                         <div>
+                            <label for="edit_weight" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Bobot (Weight)</label>
+                            <input type="number" step="0.01" min="0" max="1" name="weight" id="edit_weight" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                        <div>
                             <label for="edit_description" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Deskripsi</label>
                             <textarea name="description" id="edit_description" rows="3" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
                         </div>
@@ -154,6 +167,7 @@
     function openEditModal(category) {
         document.getElementById('edit_name').value = category.name;
         document.getElementById('edit_description').value = category.description;
+        document.getElementById('edit_weight').value = category.weight;
         
         const form = document.getElementById('editCategoryForm');
         form.action = "{{ route('admin.asset-categories.index') }}/" + category.id;

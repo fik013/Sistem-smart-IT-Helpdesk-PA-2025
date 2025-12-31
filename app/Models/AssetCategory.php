@@ -10,7 +10,7 @@ class AssetCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', 'weight'];
 
     public function inventories(): HasMany
     {

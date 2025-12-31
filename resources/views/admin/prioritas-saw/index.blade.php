@@ -8,8 +8,6 @@
     <div class="flex flex-wrap gap-2 text-sm">
         <a class="text-slate-500 dark:text-[#92a9c9] font-medium hover:text-primary transition-colors" href="{{ route('admin.dashboard') }}">Dashboard</a>
         <span class="text-slate-400 dark:text-[#64748b]">/</span>
-        <a class="text-slate-500 dark:text-[#92a9c9] font-medium hover:text-primary transition-colors" href="#">Pengaturan</a>
-        <span class="text-slate-400 dark:text-[#64748b]">/</span>
         <span class="text-slate-900 dark:text-white font-medium">Prioritas SAW</span>
     </div>
     <!-- Page Heading -->

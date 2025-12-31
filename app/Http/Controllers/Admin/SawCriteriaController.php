@@ -28,7 +28,8 @@ class SawCriteriaController extends Controller
     {
         $criteria->load('subCriterias'); // Eager load sub criterias
         $departments = \App\Models\Department::all();
-        return view('admin.prioritas-saw.edit', compact('criteria', 'departments'));
+        $assetCategories = \App\Models\AssetCategory::all();
+        return view('admin.prioritas-saw.edit', compact('criteria', 'departments', 'assetCategories'));
     }
 
     public function update(Request $request, SawCriteria $criteria)
