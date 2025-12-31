@@ -138,10 +138,10 @@
                             <div class="flex items-center gap-2">
                                 @if($user->email_verified_at)
                                     <div class="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-                                    <span class="text-[#101822] dark:text-white">Verified</span>
+                                    <span class="text-[#101822] dark:text-white">Aktif (Verified)</span>
                                 @else
-                                    <div class="h-2.5 w-2.5 rounded-full bg-yellow-500"></div>
-                                    <span class="text-[#101822] dark:text-white">Unverified</span>
+                                    <div class="h-2.5 w-2.5 rounded-full bg-slate-400"></div>
+                                    <span class="text-slate-500 dark:text-slate-400">Belum Login</span>
                                 @endif
                             </div>
                         </td>
