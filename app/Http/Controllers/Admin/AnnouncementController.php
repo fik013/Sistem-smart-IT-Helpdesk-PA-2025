@@ -10,6 +10,12 @@ class AnnouncementController extends Controller
 {
     public function index()
     {
+        // Auto-deactivate expired announcements
+        Announcement::where('is_active', true)
+            ->whereNotNull('end_date')
+            ->where('end_date', '<', now())
+            ->update(['is_active' => false]);
+
         $announcements = Announcement::latest()->paginate(10);
         return view('admin.announcements.index', compact('announcements'));
     }
@@ -20,8 +26,8 @@ class AnnouncementController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'type' => 'required|in:info,warning,critical',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
         $data = $request->all();
@@ -45,8 +51,8 @@ class AnnouncementController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'type' => 'required|in:info,warning,critical',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
         $data = $request->all();

@@ -8,6 +8,32 @@ use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/debug-announcements', function() {
+    $a = App\Models\Announcement::find(7);
+    if (!$a) return 'Announcement 7 Not Found';
+    return [
+        'id' => $a->id,
+        'title' => $a->title,
+        'active' => $a->is_active,
+        'start' => $a->start_date ? $a->start_date->format('Y-m-d H:i:s') : 'NULL',
+        'end' => $a->end_date ? $a->end_date->format('Y-m-d H:i:s') : 'NULL',
+        'now' => now()->format('Y-m-d H:i:s'),
+        'start_check' => ($a->start_date <= now()),
+        'end_check' => ($a->end_date >= now()),
+        'type' => $a->type
+    ];
+});
+Route::get('/fix-announcement-7', function() {
+    $a = App\Models\Announcement::find(7);
+    if (!$a) return 'Announcement 7 Not Found';
+    
+    $a->is_active = true;
+    $a->start_date = now()->subMinutes(5);
+    $a->end_date = now()->addDays(2);
+    $a->save();
+    
+    return 'Fixed Announcement 7: ' . json_encode($a);
+});
 Route::get('/', function () {
     return redirect()->route('login');
 });

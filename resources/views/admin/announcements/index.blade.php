@@ -2,6 +2,11 @@
 
 @section('title', 'Kelola Pengumuman')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+@endpush
+
 @section('content')
 <div class="mx-auto max-w-6xl p-6 lg:p-10 flex flex-col gap-6">
     <!-- Breadcrumbs -->
@@ -62,8 +67,8 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-400 text-xs">
                             <div class="flex flex-col gap-1">
-                                <span>Mulai: {{ $announcement->start_date ? $announcement->start_date->format('d M Y H:i') : 'Segera' }}</span>
-                                <span>Selesai: {{ $announcement->end_date ? $announcement->end_date->format('d M Y H:i') : 'Selamanya' }}</span>
+                                <span>Mulai: {{ $announcement->start_date ? $announcement->start_date->format('d M Y H:i') : '-' }}</span>
+                                <span>Selesai: {{ $announcement->end_date ? $announcement->end_date->format('d M Y H:i') : '-' }}</span>
                                 @if($announcement->end_date && $announcement->end_date < now())
                                     <span class="text-red-500 font-bold">(Expired)</span>
                                 @endif
@@ -114,7 +119,7 @@
 <div id="announcementModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeModal()"></div>
-        <div class="inline-block align-bottom bg-white dark:bg-[#1a232e] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-slate-200 dark:border-[#233348]">
+        <div class="inline-block align-bottom bg-white dark:bg-[#1a232e] rounded-lg text-left overflow-visible shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-slate-200 dark:border-[#233348]">
             <form id="announcementForm" method="POST">
                 @csrf
                 <div id="methodField"></div>
@@ -139,14 +144,12 @@
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Tanggal Mulai (Opsional)</label>
-                                <input type="datetime-local" name="start_date" id="start_date" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
-                                <p class="text-xs text-slate-400 mt-1">Kosongkan untuk tayang segera.</p>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Tanggal Mulai</label>
+                                <input type="text" name="start_date" id="start_date" required class="datetimepicker mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Pilih waktu...">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Tanggal Selesai (Opsional)</label>
-                                <input type="datetime-local" name="end_date" id="end_date" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
-                                <p class="text-xs text-slate-400 mt-1">Kosongkan untuk tayang selamanya.</p>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Tanggal Selesai</label>
+                                <input type="text" name="end_date" id="end_date" required class="datetimepicker mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Pilih waktu...">
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
@@ -157,16 +160,53 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-slate-50 dark:bg-[#111822] px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-200 dark:border-[#233348]">
-                    <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm">Simpan</button>
+                <div class="bg-slate-50 dark:bg-[#111822] px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-200 dark:border-[#233348] items-center gap-4">
+                    <button type="submit" id="saveButton" disabled class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed sm:ml-3 sm:w-auto sm:text-sm transition-all">Simpan</button>
                     <button type="button" onclick="closeModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-slate-300 dark:border-[#324867] shadow-sm px-4 py-2 bg-white dark:bg-[#1a232e] text-base font-medium text-slate-700 dark:text-[#92a9c9] hover:bg-slate-50 dark:hover:bg-[#111822] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Batal</button>
+                    <p id="validationWarning" class="text-xs text-red-500 font-medium hidden sm:block">Harap isi Tanggal Muai & Selesai</p>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    // Initialize global flatpickr instances
+    let fpStartDate, fpEndDate;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const config = {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true,
+            minuteIncrement: 1,
+            static: true, // Important for modals
+            onChange: function() {
+                validateForm();
+            }
+        };
+        
+        fpStartDate = flatpickr("#start_date", config);
+        fpEndDate = flatpickr("#end_date", config);
+    });
+
+    function validateForm() {
+        const startDate = document.getElementById('start_date').value;
+        const endDate = document.getElementById('end_date').value;
+        const btn = document.getElementById('saveButton');
+        const warning = document.getElementById('validationWarning');
+
+        if (startDate && endDate) {
+            btn.disabled = false;
+            warning.classList.add('hidden');
+        } else {
+            btn.disabled = true;
+            warning.classList.remove('hidden');
+        }
+    }
+
     function openCreateModal() {
         document.getElementById('modalTitle').innerText = 'Buat Pengumuman Baru';
         document.getElementById('announcementForm').action = "{{ route('admin.announcements.store') }}";
@@ -175,9 +215,13 @@
         document.getElementById('title').value = '';
         document.getElementById('type').value = 'info';
         document.getElementById('content').value = '';
-        document.getElementById('start_date').value = '';
-        document.getElementById('end_date').value = '';
+        
+        if(fpStartDate) fpStartDate.clear();
+        if(fpEndDate) fpEndDate.clear();
+
         document.getElementById('is_active').checked = true;
+        
+        validateForm(); // Check initial state
 
         document.getElementById('announcementModal').classList.remove('hidden');
     }
@@ -191,20 +235,21 @@
         document.getElementById('type').value = data.type;
         document.getElementById('content').value = data.content;
         
-        // Format datetime for input (YYYY-MM-DDTHH:mm)
         if(data.start_date) {
-            document.getElementById('start_date').value = data.start_date.substring(0, 16);
+            fpStartDate.setDate(data.start_date);
         } else {
-             document.getElementById('start_date').value = '';
+            fpStartDate.clear();
         }
         
         if(data.end_date) {
-            document.getElementById('end_date').value = data.end_date.substring(0, 16);
+            fpEndDate.setDate(data.end_date);
         } else {
-             document.getElementById('end_date').value = '';
+            fpEndDate.clear();
         }
 
         document.getElementById('is_active').checked = data.is_active;
+
+        validateForm(); // Check initial state
 
         document.getElementById('announcementModal').classList.remove('hidden');
     }
@@ -213,4 +258,5 @@
         document.getElementById('announcementModal').classList.add('hidden');
     }
 </script>
+@endpush
 @endsection

@@ -44,6 +44,81 @@
         </div>
     </section>
 
+
+    <!-- Announcements Section -->
+    @if($announcements->count() > 0)
+    <section class="flex flex-wrap items-start gap-3 animate-fade-in-up delay-100">
+        @foreach($announcements as $announcement)
+        <div x-data="{ expanded: true }" 
+             :class="expanded ? 'w-full p-4 md:p-5' : 'w-[calc(50%-0.375rem)] md:w-[calc(33.33%-0.5rem)] lg:w-[calc(25%-0.5625rem)] p-3 h-24 hover:scale-[1.02] cursor-pointer'"
+             class="relative overflow-hidden rounded-xl border shadow-sm transition-all duration-300
+            {{ $announcement->type == 'critical' ? 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-500/30' : 
+               ($announcement->type == 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-500/30' : 
+               'bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-500/30') }}">
+            
+            <div class="flex gap-3 relative z-10 h-full" 
+                 :class="expanded ? 'flex-col md:flex-row justify-between items-start' : 'flex-col justify-between'">
+                
+                <!-- Icon & Content -->
+                <div class="flex gap-3 flex-1" :class="expanded ? 'items-start' : 'items-center flex-row'">
+                    <!-- Icon -->
+                    <div class="shrink-0 rounded-lg transition-all {{ $announcement->type == 'critical' ? 'bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400' : ($announcement->type == 'warning' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-500/20 dark:text-yellow-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400') }}"
+                         :class="expanded ? 'p-2' : 'p-1.5'">
+                        <span class="material-symbols-outlined transition-all" :class="expanded ? 'text-2xl' : 'text-lg'">
+                            {{ $announcement->type == 'critical' ? 'fmd_bad' : ($announcement->type == 'warning' ? 'warning' : 'campaign') }}
+                        </span>
+                    </div>
+
+                    <!-- Text Content -->
+                    <div class="flex flex-col gap-0.5 w-full overflow-hidden">
+                        <div class="flex items-center gap-2" :class="expanded ? 'justify-between md:justify-start' : ''">
+                            <h3 class="font-bold text-slate-900 dark:text-white transition-all leading-tight truncate" 
+                                :class="expanded ? 'text-base md:text-lg' : 'text-xs'">
+                                {{ $announcement->title }}
+                            </h3>
+                            <!-- Badge only shown when expanded or if space permits (hidden on mini to be cleaner) -->
+                            @if($announcement->type == 'critical')
+                                <span x-show="expanded" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400 border border-red-200 dark:border-red-500/30 shrink-0">Penting</span>
+                            @endif
+                        </div>
+                        
+                        <!-- Description (Collapsible) -->
+                        <div x-show="expanded" x-collapse>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-1">{{ $announcement->content }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toggle Button / Date -->
+                <div class="flex items-center gap-3 shrink-0" :class="expanded ? 'pl-14 md:pl-0 absolute top-4 right-4 md:static' : 'absolute top-3 right-3'">
+                    <div class="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-mono" x-show="expanded">
+                        <span class="material-symbols-outlined text-[16px] align-text-bottom">event</span>
+                        {{ $announcement->created_at->format('d M Y') }}
+                    </div>
+                    <!-- Toggle Button -->
+                    <button @click.stop="expanded = !expanded" class="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-slate-400 dark:text-slate-500">
+                        <span class="material-symbols-outlined transition-transform duration-200" :class="expanded ? 'rotate-180' : ''">
+                            {{-- Change icon logic if needed, but rotate is fine --}}
+                            expand_more
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Background Decoration (Hide when minimized) -->
+            <div class="absolute -right-6 -bottom-6 opacity-5 dark:opacity-10 rotate-12 pointer-events-none" x-show="expanded" x-transition>
+                <span class="material-symbols-outlined text-[120px] {{ $announcement->type == 'critical' ? 'text-red-500' : ($announcement->type == 'warning' ? 'text-yellow-500' : 'text-blue-500') }}">
+                    {{ $announcement->type == 'critical' ? 'fmd_bad' : ($announcement->type == 'warning' ? 'warning' : 'campaign') }}
+                </span>
+            </div>
+            
+            <!-- Click anywhere to expand if minimized -->
+            <div x-show="!expanded" @click="expanded = true" class="absolute inset-0 z-0 cursor-pointer" title="Perbesar"></div>
+        </div>
+        @endforeach
+    </section>
+    @endif
+
     <!-- Stats Overview -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Stat Card 1 -->
@@ -192,48 +267,7 @@
                 </div>
             </div>
 
-            <!-- Announcements -->
-            @if($announcements->count() > 0)
-            <div class="flex flex-col gap-3">
-                 <div class="flex items-center justify-between px-1">
-                    <h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Pengumuman</h3>
-                </div>
-                @foreach($announcements as $announcement)
-                <div class="rounded-xl border p-4 shadow-sm relative overflow-hidden
-                    {{ $announcement->type == 'critical' ? 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-500/30' : 
-                       ($announcement->type == 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-500/30' : 
-                       'bg-white dark:bg-[#1e293b] border-slate-200 dark:border-[#324867]') }}">
-                    
-                    @if($announcement->type == 'critical')
-                        <div class="absolute top-0 right-0 p-2 opacity-10">
-                            <span class="material-symbols-outlined text-6xl text-red-500">warning</span>
-                        </div>
-                    @endif
-
-                    <div class="flex items-start justify-between mb-2 relative z-10">
-                        <div class="flex items-center gap-2">
-                            @if($announcement->type == 'critical')
-                                <span class="material-symbols-outlined text-red-500 text-base">error</span>
-                                <span class="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">Penting</span>
-                            @elseif($announcement->type == 'warning')
-                                <span class="material-symbols-outlined text-yellow-500 text-base">warning</span>
-                                <span class="text-xs font-bold text-yellow-600 dark:text-yellow-400 uppercase tracking-wider">Perhatian</span>
-                            @else
-                                <span class="material-symbols-outlined text-blue-500 text-base">info</span>
-                                <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Info</span>
-                            @endif
-                        </div>
-                        <span class="text-[10px] text-slate-400 font-mono">{{ $announcement->created_at->format('d M') }}</span>
-                    </div>
-                    
-                    <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1 relative z-10">{{ $announcement->title }}</h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed relative z-10">
-                        {{ $announcement->content }}
-                    </p>
-                </div>
-                @endforeach
-            </div>
-            @endif
+            <!-- Removed Announcement Section from Here -->
         </div>
     </div>
 @endsection
