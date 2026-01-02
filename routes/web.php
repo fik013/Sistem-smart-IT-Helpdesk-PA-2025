@@ -45,7 +45,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:employee')->group(function () {
         Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
         Route::get('/inventory', [App\Http\Controllers\User\InventoryController::class, 'index'])->name('user.inventory');
+        Route::get('/inventory/{id}', [App\Http\Controllers\User\InventoryController::class, 'show'])->name('user.inventory.show');
         Route::get('/faq', [App\Http\Controllers\User\FaqController::class, 'index'])->name('user.faq');
+        Route::get('/faq/search', [App\Http\Controllers\User\FaqController::class, 'search'])->name('user.faq.search');
         Route::post('/chatbot/ask', [ChatbotController::class, 'ask'])->name('chatbot.ask');
         Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
         Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
@@ -66,7 +68,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/prioritas-saw', [App\Http\Controllers\Admin\SawPriorityController::class, 'index'])->name('prioritas.index');
         Route::patch('criterias/{criteria}/toggle', [App\Http\Controllers\Admin\SawCriteriaController::class, 'toggleStatus'])->name('criterias.toggle');
         Route::resource('criterias', App\Http\Controllers\Admin\SawCriteriaController::class)->except(['create', 'show']);
-        Route::resource('sub-criterias', App\Http\Controllers\Admin\SawSubCriteriaController::class)->only(['store', 'destroy']);
+        Route::resource('sub-criterias', App\Http\Controllers\Admin\SawSubCriteriaController::class)->only(['store', 'update', 'destroy']);
         Route::resource('departments', App\Http\Controllers\Admin\DepartmentController::class)->except(['create', 'edit', 'show']);
         Route::resource('inventory', App\Http\Controllers\Admin\InventoryController::class);
         Route::resource('asset-categories', App\Http\Controllers\Admin\AssetCategoryController::class)->except(['create', 'edit', 'show']);

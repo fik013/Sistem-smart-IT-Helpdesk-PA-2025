@@ -45,6 +45,7 @@ class InventoryController extends Controller
             'serial_number' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'status' => 'required|string|in:active,inactive,maintenance',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         // Clean up data based on type
@@ -54,6 +55,10 @@ class InventoryController extends Controller
             $validated['user_id'] = null;
         }
         unset($validated['owner_type']);
+
+        if ($request->hasFile('image')) {
+            $validated['image_path'] = $request->file('image')->store('inventory-images', 'public');
+        }
 
         Inventory::create($validated);
 
@@ -85,6 +90,7 @@ class InventoryController extends Controller
             'serial_number' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'status' => 'required|string|in:active,inactive,maintenance',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         // Clean up data based on type
@@ -94,6 +100,14 @@ class InventoryController extends Controller
             $validated['user_id'] = null;
         }
         unset($validated['owner_type']);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($inventory->image_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($inventory->image_path);
+            }
+            $validated['image_path'] = $request->file('image')->store('inventory-images', 'public');
+        }
 
         $inventory->update($validated);
 

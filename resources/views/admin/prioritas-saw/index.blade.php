@@ -99,6 +99,21 @@
                         </td>
                         <td class="px-6 py-4 text-slate-500 dark:text-slate-400 w-1/3">
                             {{ $criteria->description ?? '-' }}
+                            @if($criteria->code == 'C2')
+                                <div class="mt-2">
+                                    <a href="{{ route('admin.asset-categories.index') }}" class="inline-flex items-center gap-1 text-[10px] text-blue-600 dark:text-blue-400 font-bold hover:underline bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded border border-blue-200 dark:border-blue-800">
+                                        <span class="material-symbols-outlined text-[12px]">settings</span>
+                                        Managed by Asset Category
+                                    </a>
+                                </div>
+                            @elseif($criteria->code == 'C4')
+                                <div class="mt-2">
+                                    <a href="{{ route('admin.departments.index') }}" class="inline-flex items-center gap-1 text-[10px] text-blue-600 dark:text-blue-400 font-bold hover:underline bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded border border-blue-200 dark:border-blue-800">
+                                        <span class="material-symbols-outlined text-[12px]">settings</span>
+                                        Managed by Departments
+                                    </a>
+                                </div>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                              <form action="{{ route('admin.criterias.toggle', $criteria->id) }}" method="POST" class="inline">

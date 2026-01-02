@@ -76,7 +76,9 @@
             <table class="w-full text-left text-sm text-slate-500 dark:text-[#92a9c9]">
                 <thead class="bg-slate-100 dark:bg-[#233348] text-xs uppercase text-[#101822] dark:text-white font-semibold">
                     <tr>
+                        <th class="px-6 py-4" scope="col">Foto</th>
                         <th class="px-6 py-4" scope="col">Item Details</th>
+                        <th class="px-6 py-4" scope="col">Kategori</th>
                         <th class="px-6 py-4" scope="col">Assigned To</th>
                         <th class="px-6 py-4" scope="col">Status</th>
                         <th class="px-6 py-4" scope="col">Description</th>
@@ -87,10 +89,26 @@
                     @forelse($inventories as $item)
                     <tr class="hover:bg-slate-50 dark:hover:bg-[#233348]/50 transition-colors group">
                         <td class="px-6 py-4">
+                            @if($item->image_path)
+                                <div class="h-10 w-10 rounded-lg overflow-hidden border border-slate-200 dark:border-[#324867]">
+                                    <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->item_name }}" class="h-full w-full object-cover">
+                                </div>
+                            @else
+                                <div class="h-10 w-10 rounded-lg bg-slate-100 dark:bg-[#233348] flex items-center justify-center text-slate-400 dark:text-[#92a9c9]">
+                                    <span class="material-symbols-outlined text-[20px]">image</span>
+                                </div>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
                             <div class="flex flex-col">
                                 <span class="font-medium text-[#101822] dark:text-white">{{ $item->item_name }}</span>
                                 <span class="text-xs">S/N: {{ $item->serial_number ?? 'N/A' }}</span>
                             </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center rounded-md bg-slate-50 dark:bg-slate-500/10 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 ring-1 ring-inset ring-slate-500/10 dark:ring-slate-500/20">
+                                {{ $item->category->name ?? 'Uncategorized' }}
+                            </span>
                         </td>
                         <td class="px-6 py-4">
                             @if($item->department)
@@ -137,7 +155,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center">No inventory items found.</td>
+                        <td colspan="6" class="px-6 py-4 text-center">No inventory items found.</td>
                     </tr>
                     @endforelse
                 </tbody>

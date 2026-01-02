@@ -52,7 +52,7 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div x-show="mobileMenuOpen" x-collapse class="lg:hidden w-full border-t border-slate-100 dark:border-[#233348] mt-4 pt-4 pb-2 flex flex-col gap-4">
+    <div x-show="mobileMenuOpen" x-collapse class="lg:hidden w-full border-t border-slate-100 dark:border-[#233348] mt-4 pt-4 pb-2 flex flex-col gap-4" style="display: none;">
         <a class="px-2 py-2 {{ request()->routeIs('user.dashboard') ? 'text-primary font-bold' : 'text-slate-600 dark:text-slate-300' }}" href="{{ route('user.dashboard') }}">Dashboard</a>
         <a class="px-2 py-2 {{ request()->routeIs('user.faq') ? 'text-primary font-bold' : 'text-slate-600 dark:text-slate-300' }}" href="{{ route('user.faq') }}">FAQ</a>
         <a class="px-2 py-2 {{ request()->routeIs('tickets.*') ? 'text-primary font-bold' : 'text-slate-600 dark:text-slate-300' }}" href="{{ route('tickets.index') }}">Tiket Saya</a>

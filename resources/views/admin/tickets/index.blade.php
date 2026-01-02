@@ -75,6 +75,7 @@
                         <th class="px-6 py-4" scope="col">SAW Score</th>
                         <th class="px-6 py-4" scope="col">Subject</th>
                         <th class="px-6 py-4" scope="col">User</th>
+                        <th class="px-6 py-4" scope="col">Urgency</th>
                         <th class="px-6 py-4" scope="col">Status</th>
                         <th class="px-6 py-4" scope="col">Date</th>
                         <th class="px-6 py-4 text-right" scope="col">Actions</th>
@@ -99,6 +100,15 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
+                             <!-- Urgency Selection Display -->
+                            <span class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-bold uppercase tracking-wider
+                                {{ $ticket->urgency == 'high' ? 'text-red-600 bg-red-100 dark:bg-red-500/10 dark:text-red-500' : 
+                                  ($ticket->urgency == 'medium' ? 'text-blue-600 bg-blue-100 dark:bg-blue-500/10 dark:text-blue-500' : 
+                                  'text-green-600 bg-green-100 dark:bg-green-500/10 dark:text-green-500') }}">
+                                {{ $ticket->urgency == 'high' ? 'TINGGI' : ($ticket->urgency == 'medium' ? 'SEDANG' : 'RENDAH') }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
                             <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium border
                                 {{ $ticket->status === 'pending' ? 'bg-yellow-50 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border-yellow-200 dark:border-yellow-500/20' : 
                                    ($ticket->status === 'processing' ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-500 border-blue-200 dark:border-blue-500/20' : 'bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-500 border-green-200 dark:border-green-500/20') }}">
@@ -106,7 +116,14 @@
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <div>{{ $ticket->created_at->diffForHumans() }}</div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-medium text-[#101822] dark:text-white">
+                                    {{ $ticket->created_at->translatedFormat('d M Y, H:i') }}
+                                </span>
+                                <span class="text-xs text-slate-500 dark:text-[#92a9c9]">
+                                    {{ $ticket->created_at->diffForHumans() }}
+                                </span>
+                            </div>
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex justify-end gap-2">

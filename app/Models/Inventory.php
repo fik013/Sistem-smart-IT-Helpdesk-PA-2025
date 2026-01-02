@@ -18,6 +18,7 @@ class Inventory extends Model
         'description',
         'serial_number',
         'status',
+        'image_path',
     ];
 
     public function user(): BelongsTo

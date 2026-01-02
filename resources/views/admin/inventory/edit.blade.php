@@ -21,7 +21,7 @@
 
     <!-- Form -->
     <div class="rounded-xl border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e] p-6">
-        <form action="{{ route('admin.inventory.update', $inventory) }}" method="POST" class="flex flex-col gap-6">
+        <form action="{{ route('admin.inventory.update', $inventory) }}" method="POST" class="flex flex-col gap-6" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
@@ -132,6 +132,23 @@
                     <option value="inactive" {{ old('status', $inventory->status) == 'inactive' ? 'selected' : '' }}>Inactive (Rusak/Tidak Digunakan)</option>
                 </select>
                 @error('status')
+                    <p class="text-red-400 text-xs">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Image Upload -->
+             <div class="flex flex-col gap-2">
+                <label for="image" class="text-slate-700 dark:text-white text-sm font-medium">Foto Aset</label>
+                @if($inventory->image_path)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $inventory->image_path) }}" alt="Current Image" class="w-32 h-32 object-cover rounded-lg border border-slate-200 dark:border-[#324867]">
+                        <p class="text-xs text-slate-500 mt-1">Gambar saat ini</p>
+                    </div>
+                @endif
+                <input type="file" name="image" id="image" accept="image/*"
+                       class="w-full rounded-lg border border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] p-2.5 text-slate-900 dark:text-white focus:border-primary focus:ring-primary focus:outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-blue-600">
+                <p class="text-xs text-slate-500 dark:text-text-secondary">Format: JPG, PNG, JPEG. Max: 2MB. Biarkan kosong jika tidak ingin mengubah gambar.</p>
+                @error('image')
                     <p class="text-red-400 text-xs">{{ $message }}</p>
                 @enderror
             </div>

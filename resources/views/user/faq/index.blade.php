@@ -12,17 +12,20 @@
     </div>
 
     <!-- Search Tool (Optional but good for UX) -->
-    <div class="relative w-full max-w-xl">
+    <form action="{{ route('user.faq') }}" method="GET" class="relative w-full max-w-xl">
         <div
             class="flex items-center rounded-lg border border-slate-200 dark:border-border-dark bg-white dark:bg-[#1A2634] overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all h-12">
             <div class="text-slate-400 dark:text-text-secondary flex items-center justify-center pl-4">
                 <span class="material-symbols-outlined text-[24px]">search</span>
             </div>
             <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
                 class="flex w-full min-w-0 flex-1 resize-none bg-transparent text-slate-900 dark:text-white focus:outline-0 h-full placeholder:text-slate-400 dark:placeholder:text-text-secondary px-4 text-base font-normal leading-normal"
                 placeholder="Cari pertanyaan..." />
         </div>
-    </div>
+    </form>
 
     <!-- FAQ Accordion List -->
     <div class="flex flex-col gap-4 mt-4" x-data="{ active: null }">
@@ -62,8 +65,8 @@
                 <span class="material-symbols-outlined">add_task</span>
                 Buat Tiket
             </a>
-            <a href="#" class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-white dark:bg-[#233348] border border-slate-200 dark:border-border-dark hover:bg-slate-50 dark:hover:bg-[#324867] transition-colors text-slate-900 dark:text-white text-sm font-bold leading-normal">
-                <span class="material-symbols-outlined">chat</span>
+            <a href="{{ route('user.dashboard') }}" class="flex items-center justify-center gap-2 rounded-lg h-11 px-6 bg-white dark:bg-[#233348] border border-slate-200 dark:border-border-dark hover:bg-slate-50 dark:hover:bg-[#324867] transition-colors text-slate-900 dark:text-white text-sm font-bold leading-normal">
+                <span class="material-symbols-outlined">smart_toy</span>
                 Chat AI
             </a>
         </div>

@@ -73,6 +73,8 @@
                         <div class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 text-sm rounded-lg border border-blue-200 dark:border-blue-900/30">
                             Managed automatically via <a href="{{ route('admin.asset-categories.index') }}" class="font-bold underline">Kelola Kategori Aset</a>
                         </div>
+                    @elseif(str_contains(strtolower($criteria->name), 'tingkat urgensi') || $criteria->code == 'C1' || str_contains(strtolower($criteria->name), 'pengguna aset') || $criteria->code == 'C3')
+                        {{-- Hide Add button for Urgency & Pengguna Aset --}}
                     @else
                         <button onclick="openCreateSubCriteriaModal()" class="flex items-center gap-2 text-sm font-bold text-primary bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
                             <span class="material-symbols-outlined text-[18px]">add</span>
@@ -137,11 +139,16 @@
                                         {{ number_format($sub->weight, 2) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <form action="{{ route('admin.sub-criterias.destroy', $sub->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus sub-kriteria ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 dark:hover:text-red-400">Hapus</button>
-                                        </form>
+                                        @if($criteria->code == 'C1' || $criteria->code == 'C3')
+                                            {{-- Urgency & Asset User: Only Edit, No Delete --}}
+                                            <button onclick="openEditSubCriteriaModal('{{ $sub->id }}', '{{ $sub->name }}', '{{ $sub->weight }}')" class="text-primary hover:text-blue-900 dark:hover:text-blue-400">Edit Bobot</button>
+                                        @else
+                                            <form action="{{ route('admin.sub-criterias.destroy', $sub->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus sub-kriteria ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900 dark:hover:text-red-400">Hapus</button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty
@@ -250,12 +257,56 @@
     </div>
 </div>
 
+<!-- Edit Sub Criteria Modal (Generic) -->
+<div id="editSubCriteriaModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeEditSubCriteriaModal()"></div>
+        <div class="inline-block align-bottom bg-white dark:bg-[#1a232e] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-slate-200 dark:border-[#233348]">
+            <form id="editSubCriteriaForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="bg-white dark:bg-[#1a232e] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Edit Sub-Kriteria</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Nama / Label</label>
+                            <input type="text" name="name" id="sub_name" readonly class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-slate-100 dark:bg-[#111822] text-slate-500 dark:text-slate-400 shadow-sm sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Nilai Bobot (0.00 - 1.00)</label>
+                            <input type="number" step="0.01" min="0" max="1" name="weight" id="sub_weight" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 dark:bg-[#111822] px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-slate-200 dark:border-[#233348]">
+                    <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm">Simpan</button>
+                    <button type="button" onclick="closeEditSubCriteriaModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-slate-300 dark:border-[#324867] shadow-sm px-4 py-2 bg-white dark:bg-[#1a232e] text-base font-medium text-slate-700 dark:text-[#92a9c9] hover:bg-slate-50 dark:hover:bg-[#111822] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     function openCreateSubCriteriaModal() {
         document.getElementById('createSubCriteriaModal').classList.remove('hidden');
     }
     function closeCreateSubCriteriaModal() {
         document.getElementById('createSubCriteriaModal').classList.add('hidden');
+    }
+
+    function openEditSubCriteriaModal(id, name, weight) {
+        document.getElementById('sub_name').value = name;
+        document.getElementById('sub_weight').value = weight;
+        
+        let form = document.getElementById('editSubCriteriaForm');
+        form.action = "{{ url('admin/sub-criterias') }}/" + id;
+        
+        document.getElementById('editSubCriteriaModal').classList.remove('hidden');
+    }
+
+    function closeEditSubCriteriaModal() {
+        document.getElementById('editSubCriteriaModal').classList.add('hidden');
     }
 
     function openEditDepartmentModal(id, name, weight) {

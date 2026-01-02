@@ -10,15 +10,33 @@ use App\Services\SawService;
 
 class TicketController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $tickets = $user->tickets()->latest()->paginate(10);
+        $query = $user->tickets()->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('id', 'like', "%$search%")
+                  ->orWhere('subject', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('urgency') && $request->urgency !== 'all') {
+            $query->where('urgency', $request->urgency);
+        }
+
+        $tickets = $query->paginate(10)->withQueryString();
         
         $stats = [
             'total' => $user->tickets()->count(),
             'open' => $user->tickets()->where('status', 'pending')->count(),
-            'processing' => $user->tickets()->where('status', 'processing')->count(), // changed from in_progress to processing matching enum
+            'processing' => $user->tickets()->where('status', 'processing')->count(),
             'completed' => $user->tickets()->where('status', 'completed')->count(),
         ];
         
@@ -27,8 +45,26 @@ class TicketController extends Controller
 
     public function create()
     {
-        $inventories = Auth::user()->inventories;
-        return view('user.tickets.create', compact('inventories'));
+        $user = Auth::user();
+        $query = \App\Models\Inventory::query();
+
+        // Base Query: User's items OR Department's items
+        $query->where(function($q) use ($user) {
+            $q->where('user_id', $user->id);
+            
+            if ($user->department) {
+                // Find department by name
+                $dept = \App\Models\Department::where('name', $user->department)->first();
+                if ($dept) {
+                     $q->orWhere('department_id', $dept->id);
+                }
+            }
+        });
+
+        $inventories = $query->get();
+        $announcements = \App\Models\Announcement::active()->latest()->limit(3)->get();
+        
+        return view('user.tickets.create', compact('inventories', 'announcements'));
     }
 
     public function store(Request $request, SawService $sawService)
@@ -36,7 +72,7 @@ class TicketController extends Controller
         $validated = $request->validate([
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
-            'inventory_id' => 'nullable|exists:inventories,id',
+            'inventory_id' => 'required|exists:inventories,id',
             'urgency' => 'required|in:low,medium,high',
             'evidence' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]);

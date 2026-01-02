@@ -60,43 +60,56 @@
                 </div>
             </div>
             <!-- Toolbar: Search & Filters -->
-            <div
+            <!-- Toolbar: Search & Filters -->
+            <form method="GET" action="{{ route('tickets.index') }}"
                 class="flex flex-col lg:flex-row gap-4 items-center justify-between bg-surface-dark/30 p-2 rounded-xl border border-surface-border">
                 <div class="w-full lg:w-96">
                     <label
                         class="flex items-center w-full h-10 rounded-lg bg-surface-dark border border-surface-border focus-within:border-primary transition-colors overflow-hidden">
                         <div class="flex items-center justify-center pl-3 pr-2 text-text-secondary">
-                            <span class="material-symbols-outlined !text-[20px]">search</span>
+                            <button type="submit">
+                                <span class="material-symbols-outlined !text-[20px]">search</span>
+                            </button>
                         </div>
                         <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
                             class="w-full bg-transparent border-none text-white text-sm placeholder:text-text-secondary focus:ring-0 h-full"
                             placeholder="Cari ID Tiket, Subjek..." />
                     </label>
                 </div>
                 <div class="flex gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 scrollbar-hide">
-                    <button
-                        class="flex h-9 shrink-0 items-center gap-2 rounded-lg border border-surface-border bg-surface-dark hover:bg-surface-border px-3 transition-colors">
-                        <span class="text-white text-sm font-medium">Semua Status</span>
-                        <span class="material-symbols-outlined text-text-secondary !text-[18px]">expand_more</span>
-                    </button>
-                    <button
-                        class="flex h-9 shrink-0 items-center gap-2 rounded-lg border border-surface-border bg-surface-dark hover:bg-surface-border px-3 transition-colors">
-                        <span class="text-white text-sm font-medium">Prioritas</span>
-                        <span class="material-symbols-outlined text-text-secondary !text-[18px]">expand_more</span>
-                    </button>
-                    <button
-                        class="flex h-9 shrink-0 items-center gap-2 rounded-lg border border-surface-border bg-surface-dark hover:bg-surface-border px-3 transition-colors">
-                        <span class="text-white text-sm font-medium">Bulan Ini</span>
-                        <span class="material-symbols-outlined text-text-secondary !text-[18px]">calendar_month</span>
-                    </button>
+                    <div class="relative">
+                        <select name="status" onchange="this.form.submit()"
+                            class="appearance-none flex h-9 shrink-0 items-center gap-2 rounded-lg border border-surface-border bg-surface-dark hover:bg-surface-border pl-3 pr-8 transition-colors text-white text-sm font-medium focus:ring-0 focus:border-primary cursor-pointer w-full">
+                            <option value="all">Semua Status</option>
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Processing</option>
+                            <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                        </select>
+                        <span class="material-symbols-outlined text-text-secondary !text-[18px] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+                    </div>
+
+                    <div class="relative">
+                        <select name="urgency" onchange="this.form.submit()"
+                            class="appearance-none flex h-9 shrink-0 items-center gap-2 rounded-lg border border-surface-border bg-surface-dark hover:bg-surface-border pl-3 pr-8 transition-colors text-white text-sm font-medium focus:ring-0 focus:border-primary cursor-pointer w-full">
+                            <option value="all">Semua Prioritas</option>
+                            <option value="low" {{ request('urgency') == 'low' ? 'selected' : '' }}>Low</option>
+                            <option value="medium" {{ request('urgency') == 'medium' ? 'selected' : '' }}>Medium</option>
+                            <option value="high" {{ request('urgency') == 'high' ? 'selected' : '' }}>High</option>
+                        </select>
+                         <span class="material-symbols-outlined text-text-secondary !text-[18px] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+                    </div>
+
                     <div class="w-px h-6 bg-surface-border my-auto mx-1"></div>
-                    <button
+                    <a href="{{ route('tickets.index') }}"
                         class="flex size-9 shrink-0 items-center justify-center rounded-lg border border-surface-border bg-surface-dark hover:bg-surface-border text-text-secondary transition-colors"
-                        title="Export Data">
-                        <span class="material-symbols-outlined !text-[20px]">download</span>
-                    </button>
+                        title="Reset Filter">
+                        <span class="material-symbols-outlined !text-[20px]">restart_alt</span>
+                    </a>
                 </div>
-            </div>
+            </form>
             <!-- Ticket Table -->
             <div class="overflow-hidden rounded-xl border border-surface-border bg-surface-dark/20">
                 <div class="overflow-x-auto">
