@@ -99,8 +99,30 @@
                         <span class="material-symbols-outlined">settings</span>
                     </button> -->
                 </div>
-                <div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border border-slate-200 dark:border-[#233348]" 
-                     style='background-image: url("https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Admin') }}");'>
+                <div class="relative">
+                    <button onclick="document.getElementById('profile-popup').classList.toggle('hidden')" class="flex items-center gap-2 focus:outline-none transition-transform active:scale-95">
+                        <div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border border-slate-200 dark:border-[#233348]" 
+                             style="background-image: url('{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}');">
+                        </div>
+                    </button>
+                    <!-- Profile Popup -->
+                    <div id="profile-popup" class="hidden absolute top-12 right-0 w-56 z-50 rounded-xl border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e] shadow-xl overflow-hidden py-1">
+                        <div class="px-4 py-3 border-b border-slate-200 dark:border-[#233348]">
+                            <p class="text-sm font-bold text-[#101822] dark:text-white truncate">{{ auth()->user()->name }}</p>
+                            <p class="text-xs text-slate-500 dark:text-[#92a9c9] truncate capitalize">{{ auth()->user()->role }}</p>
+                        </div>
+                        <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-[#92a9c9] hover:bg-slate-50 dark:hover:bg-[#233348] transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                            Kelola Profile
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">logout</span>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </header>

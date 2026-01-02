@@ -346,8 +346,8 @@
              }
         }
         
-        // Show Password fields for Edit (Optional reset)
-        document.getElementById('password-container').classList.remove('hidden');
+        // Hide Password fields for Edit as they are no longer used
+        document.getElementById('password-container').classList.add('hidden');
         document.getElementById('password-info').classList.add('hidden');
         document.getElementById('password').required = false;
         document.getElementById('password_confirmation').required = false;

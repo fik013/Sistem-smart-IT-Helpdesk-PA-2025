@@ -54,6 +54,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Admin Routes
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
+
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/kelola-akun', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
         Route::post('/kelola-akun', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
