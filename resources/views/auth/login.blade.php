@@ -133,13 +133,6 @@
                                 @error('password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </label>
 
-                            <!-- Remember Me -->
-                            <div class="block">
-                                <label for="remember_me" class="inline-flex items-center">
-                                    <input id="remember_me" type="checkbox" class="rounded border-gray-300 dark:border-slate-700 text-primary shadow-sm focus:ring-primary" name="remember">
-                                    <span class="ml-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Remember me') }}</span>
-                                </label>
-                            </div>
 
                             <!-- Submit Button -->
                             <button type="submit" class="mt-2 w-full bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all shadow-lg shadow-primary/25 active:scale-[0.98] flex items-center justify-center gap-2">
