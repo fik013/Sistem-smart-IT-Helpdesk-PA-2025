@@ -26,6 +26,46 @@
         </div>
     @endif
 
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
+            <div class="flex justify-between items-start">
+                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Tickets</p>
+                <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">confirmation_number</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Ticket::count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
+            <div class="flex justify-between items-start">
+                <p class="text-yellow-600 dark:text-yellow-500 text-sm font-medium uppercase tracking-wider">Pending</p>
+                <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-500">pending</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Ticket::where('status', 'pending')->count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
+            <div class="flex justify-between items-start">
+                <p class="text-blue-600 dark:text-blue-500 text-sm font-medium uppercase tracking-wider">Processing</p>
+                <span class="material-symbols-outlined text-blue-600 dark:text-blue-500">autorenew</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Ticket::where('status', 'processing')->count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
+            <div class="flex justify-between items-start">
+                <p class="text-green-600 dark:text-green-500 text-sm font-medium uppercase tracking-wider">Completed</p>
+                <span class="material-symbols-outlined text-green-600 dark:text-green-500">check_circle</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Ticket::where('status', 'completed')->count() }}</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Data Table -->
     <div class="rounded-xl border border-slate-200 dark:border-[#233348] overflow-hidden bg-white dark:bg-[#1a232e]">
         <div class="overflow-x-auto">

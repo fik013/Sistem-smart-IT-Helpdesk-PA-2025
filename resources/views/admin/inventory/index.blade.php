@@ -30,6 +30,46 @@
         </div>
     @endif
 
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
+            <div class="flex justify-between items-start">
+                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Assets</p>
+                <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">inventory_2</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Inventory::count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
+            <div class="flex justify-between items-start">
+                <p class="text-emerald-600 dark:text-emerald-500 text-sm font-medium uppercase tracking-wider">Active</p>
+                <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-500">check_circle</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Inventory::where('status', 'active')->count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
+            <div class="flex justify-between items-start">
+                <p class="text-yellow-600 dark:text-yellow-500 text-sm font-medium uppercase tracking-wider">Maintenance</p>
+                <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-500">build</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Inventory::where('status', 'maintenance')->count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
+            <div class="flex justify-between items-start">
+                <p class="text-red-600 dark:text-red-500 text-sm font-medium uppercase tracking-wider">Retired</p>
+                <span class="material-symbols-outlined text-red-600 dark:text-red-500">delete</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Inventory::where('status', 'retired')->count() }}</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Data Table -->
     <div class="rounded-xl border border-slate-200 dark:border-[#233348] overflow-hidden bg-white dark:bg-[#1a232e]">
         <div class="overflow-x-auto">

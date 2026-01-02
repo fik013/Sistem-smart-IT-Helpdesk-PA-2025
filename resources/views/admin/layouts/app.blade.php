@@ -46,6 +46,9 @@
                     <span class="material-symbols-outlined" style="font-size: 32px;">dns</span>
                 </div>
                 <h2 class="text-[#101822] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Smart IT Helpdesk</h2>
+                <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-[#233348] text-slate-500 dark:text-[#92a9c9] transition-colors focus:outline-none ml-2">
+                     <span id="toggle-icon" class="material-symbols-outlined">menu_open</span>
+                </button>
             </div>
             <div class="flex flex-1 justify-end gap-8">
                 <div class="flex gap-2 relative">
@@ -139,6 +142,56 @@
     </div>
     @stack('scripts')
     <script>
+        // Sidebar Toggle Logic
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const sidebarHeader = document.getElementById('sidebar-header');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const toggleIcon = document.getElementById('toggle-icon');
+            
+            // Toggle Width
+            if (sidebar.classList.contains('w-64')) {
+                // Collapse
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-20');
+                
+                // Hide Header
+                sidebarHeader.classList.add('hidden');
+                
+                // Hide Text
+                sidebarTexts.forEach(text => text.classList.add('hidden'));
+                
+                // Center Icons
+                sidebarLinks.forEach(link => {
+                     link.classList.remove('justify-start');
+                     link.classList.add('justify-center');
+                });
+
+                // Change Icon
+                toggleIcon.textContent = 'menu';
+            } else {
+                // Expand
+                sidebar.classList.remove('w-20');
+                sidebar.classList.add('w-64');
+                
+                 // Show Header
+                sidebarHeader.classList.remove('hidden');
+                
+                // Show Text
+                sidebarTexts.forEach(text => text.classList.remove('hidden'));
+                
+                 // Reset Alignment
+                sidebarLinks.forEach(link => {
+                     link.classList.remove('justify-center');
+                     link.classList.add('justify-start');
+                });
+
+                // Change Icon
+                toggleIcon.textContent = 'menu_open';
+            }
+        }
+
         const themeToggleBtn = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const htmlElement = document.documentElement;

@@ -125,7 +125,10 @@
                                 </div>
                                 <div class="relative flex items-center group">
                                     <span class="absolute left-3.5 text-slate-400 dark:text-text-secondary material-symbols-outlined text-[20px]">lock</span>
-                                    <input type="password" name="password" class="form-input w-full rounded-lg border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-[#111822] text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary pl-10 pr-10 py-3 text-sm transition-all" placeholder="••••••••" required autocomplete="current-password"/>
+                                    <input id="password" type="password" name="password" class="form-input w-full rounded-lg border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-[#111822] text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary pl-10 pr-10 py-3 text-sm transition-all" placeholder="••••••••" required autocomplete="current-password"/>
+                                    <button type="button" onclick="togglePassword()" class="absolute right-3.5 text-slate-400 dark:text-text-secondary hover:text-slate-600 dark:hover:text-white focus:outline-none transition-colors">
+                                        <span id="eye-icon" class="material-symbols-outlined text-[20px]">visibility</span>
+                                    </button>
                                 </div>
                                 @error('password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </label>
@@ -157,5 +160,18 @@
             </div>
         </div>
     </main>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.textContent = 'visibility';
+            }
+        }
+    </script>
 </body>
 </html>

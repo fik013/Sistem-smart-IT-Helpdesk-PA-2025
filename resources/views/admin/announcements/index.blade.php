@@ -28,6 +28,46 @@
         </button>
     </div>
 
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-surface-light dark:bg-surface-dark">
+            <div class="flex justify-between items-start">
+                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Info</p>
+                <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">campaign</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Announcement::count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-surface-light dark:bg-surface-dark">
+            <div class="flex justify-between items-start">
+                <p class="text-green-600 dark:text-green-500 text-sm font-medium uppercase tracking-wider">Active</p>
+                <span class="material-symbols-outlined text-green-600 dark:text-green-500">check_circle</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Announcement::where('is_active', true)->where('end_date', '>', now())->count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-surface-light dark:bg-surface-dark">
+            <div class="flex justify-between items-start">
+                <p class="text-yellow-600 dark:text-yellow-500 text-sm font-medium uppercase tracking-wider">Expired Soon</p>
+                <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-500">timer</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Announcement::where('end_date', '>', now())->where('end_date', '<', now()->addDays(3))->count() }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-surface-light dark:bg-surface-dark">
+            <div class="flex justify-between items-start">
+                <p class="text-red-600 dark:text-red-500 text-sm font-medium uppercase tracking-wider">Critical</p>
+                <span class="material-symbols-outlined text-red-600 dark:text-red-500">warning</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ \App\Models\Announcement::where('type', 'critical')->where('is_active', true)->count() }}</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Data Table -->
     <div class="rounded-xl border border-slate-200 dark:border-[#324867] bg-surface-light dark:bg-surface-dark shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
