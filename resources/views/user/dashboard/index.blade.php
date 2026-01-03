@@ -291,7 +291,12 @@
                         const response = await axios.post('{{ route('chatbot.ask') }}', { message: text });
                         this.messages.push({ sender: 'ai', text: response.data.response });
                     } catch (e) {
-                         this.messages.push({ sender: 'ai', text: 'Error interacting with AI.' });
+                         console.error(e);
+                         let errorMsg = 'Error interacting with AI.';
+                         if (e.response && e.response.data && e.response.data.response) {
+                             errorMsg = e.response.data.response;
+                         }
+                         this.messages.push({ sender: 'ai', text: errorMsg });
                     }
                     this.loading = false;
                 }

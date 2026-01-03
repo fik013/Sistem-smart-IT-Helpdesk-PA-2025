@@ -13,6 +13,16 @@
     
     <!-- Tailwind CSS with Plugins -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+             if (token) {
+                 axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+                 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+             }
+        });
+    </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
