@@ -48,5 +48,12 @@ class DatabaseSeeder extends Seeder
             'serial_number' => 'EPS-987654',
             'status' => 'good',
         ]);
+
+        $this->call([
+            DepartmentSeeder::class,
+            AssetCategorySeeder::class,
+            SawCriteriaSeeder::class,
+            SawSubCriteriaSeeder::class,
+        ]);
     }
 }

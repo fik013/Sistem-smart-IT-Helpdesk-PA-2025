@@ -19,44 +19,40 @@ class SawService
             $code = strtoupper($criteria->code);
 
             switch ($code) {
+                // ... (Cases logic remains same, just capturing $val) ... 
                 case 'C1': // Tingkat Urgensi
-                    // Screenshot shows: high (1.00), medium (0.66), low (0.33)
-                    // Form sends: high, medium, low
                     $val = $this->getSubCriteriaWeight($criteria, $ticket->urgency);
                     break;
-                
                 case 'C2': // Jenis Aset
-                    // Screenshot shows: Network, Server, etc.
-                    // Managed automatically via Asset Category
-                    // We must match $ticket->inventory->category->name exactly or closely
                     $type = $ticket->inventory && $ticket->inventory->category ? $ticket->inventory->category->name : '';
                     $val = $this->getSubCriteriaWeight($criteria, $type);
                     break;
-
                 case 'C3': // Pengguna Aset
-                    // Screenshot shows: "Perorangan" (0.50), "Divisi / Departemen" (1.00)
                     if ($ticket->inventory) {
-                         // Check explicit user_id match for Personal
                          if ($ticket->inventory->user_id && $ticket->inventory->user_id == $ticket->user_id) {
                              $val = $this->getSubCriteriaWeight($criteria, 'Perorangan');
                          } else {
-                             // Default to Department
                              $val = $this->getSubCriteriaWeight($criteria, 'Divisi / Departemen');
                          }
                     } else {
                         $val = 0;
                     }
                     break;
-
                 case 'C4': // Jabatan Pengguna
-                    // Screenshot shows: Direktur, Divisi IT, Manager, Divisi Desain, etc.
-                    // This seems to map to Department Names or Role Titles.
-                    // We will use User's Department name.
                     $dept = $ticket->user->department ?? '';
                     $val = $this->getSubCriteriaWeight($criteria, $dept);
                     break;
             }
 
+            // --- AUTOMATIC COST/BENEFIT LOGIC ---
+            // If attribute is 'cost', we invert the normalized value.
+            // Assumption: Sub-criteria weights in DB are always 'positive' (0-1 scale of magnitude).
+            // For Cost: Higher magnitude = Lower Score.
+            // Formula: Valid Value = 1.0 - Normalized Weight (Simple Inversion)
+            if (strtolower($criteria->attribute) === 'cost') {
+                $val = 1.0 - $val;
+            }
+            
             $score += $weight * $val;
         }
 
