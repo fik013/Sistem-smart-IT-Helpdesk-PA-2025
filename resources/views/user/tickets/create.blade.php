@@ -4,10 +4,10 @@
     <div class="flex flex-1 justify-center py-8">
         <div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
             <!-- Page Heading -->
-            <div class="flex flex-wrap justify-between gap-3 px-4 pb-6 border-b border-white/10 mb-6">
+            <div class="flex flex-wrap justify-between gap-3 px-4 pb-6 border-b border-slate-200 dark:border-white/10 mb-6">
                 <div class="flex min-w-72 flex-col gap-2">
-                    <h1 class="text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Ajukan Tiket Bantuan</h1>
-                    <p class="text-slate-400 text-base font-normal leading-normal max-w-2xl">
+                    <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Ajukan Tiket Bantuan</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal max-w-2xl">
                         Isi formulir di bawah ini untuk melaporkan masalah teknis Anda. Sistem kami akan menyarankan artikel yang relevan saat Anda mengetik.
                     </p>
                 </div>
@@ -19,16 +19,16 @@
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Subject Field -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-white text-sm font-semibold leading-normal">Judul Masalah</label>
-                        <input type="text" id="subject_input" name="subject" class="form-input flex w-full rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-[#192433] h-14 placeholder:text-slate-500 px-4 text-base font-normal transition-all" placeholder="Contoh: Tidak bisa koneksi ke VPN" required value="{{ old('subject') }}"/>
+                        <label class="text-slate-900 dark:text-white text-sm font-semibold leading-normal">Judul Masalah</label>
+                        <input type="text" id="subject_input" name="subject" class="form-input flex w-full rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#192433] h-14 placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 text-base font-normal transition-all" placeholder="Contoh: Tidak bisa koneksi ke VPN" required value="{{ old('subject') }}"/>
                         @error('subject') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
                     
                     <!-- Asset Selection -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-white text-sm font-semibold leading-normal">Pilih Aset <span class="text-red-500">*</span></label>
+                        <label class="text-slate-900 dark:text-white text-sm font-semibold leading-normal">Pilih Aset <span class="text-red-500">*</span></label>
                         <div class="relative">
-                            <select name="inventory_id" id="inventory_select" required class="form-select flex w-full appearance-none rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-[#192433] h-14 placeholder:text-slate-500 px-4 pr-10 text-base font-normal transition-all cursor-pointer">
+                            <select name="inventory_id" id="inventory_select" required class="form-select flex w-full appearance-none rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#192433] h-14 placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 pr-10 text-base font-normal transition-all cursor-pointer">
                                 <option value="" selected disabled>-- Pilih Aset yang Mengalami Kendala --</option>
                                 @foreach($inventories as $inventory)
                                     <option value="{{ $inventory->id }}" {{ request('asset_id') == $inventory->id ? 'selected' : '' }}>
@@ -45,15 +45,15 @@
 
                     <!-- Urgency/Priority Section -->
                     <div class="flex flex-col gap-3 pt-2">
-                        <h2 class="text-white text-sm font-semibold leading-normal">Tingkat Urgensi</h2>
+                        <h2 class="text-slate-900 dark:text-white text-sm font-semibold leading-normal">Tingkat Urgensi</h2>
                         <div class="grid grid-cols-3 gap-4">
                             @foreach(['low' => ['Rendah', 'low_priority', 'green'], 'medium' => ['Sedang', 'equalizer', 'blue'], 'high' => ['Tinggi', 'priority_high', 'red']] as $key => $data)
                             <label class="cursor-pointer group">
                                 <input type="radio" name="urgency" value="{{ $key }}" class="peer sr-only radio-card" {{ $key == 'low' ? 'checked' : '' }}/>
-                                <div class="h-full rounded-lg border border-slate-700 bg-[#192433] p-4 flex flex-col items-center justify-center gap-3 hover:border-slate-500 transition-all 
-                                     peer-checked:bg-{{ $data[2] }}-900/20 peer-checked:border-{{ $data[2] }}-500 peer-checked:text-{{ $data[2] }}-500">
+                                <div class="h-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#192433] p-4 flex flex-col items-center justify-center gap-3 hover:border-slate-500 transition-all 
+                                     peer-checked:bg-{{ $data[2] }}-50 dark:peer-checked:bg-{{ $data[2] }}-900/20 peer-checked:border-{{ $data[2] }}-500 peer-checked:text-{{ $data[2] }}-600 dark:peer-checked:text-{{ $data[2] }}-500 shadow-sm">
                                     <span class="material-symbols-outlined text-3xl text-{{ $data[2] }}-500 group-hover:scale-110 transition-transform">{{ $data[1] }}</span>
-                                    <span class="text-sm font-bold">{{ $data[0] }}</span>
+                                    <span class="text-sm font-bold text-slate-700 dark:text-white peer-checked:text-{{ $data[2] }}-600 dark:peer-checked:text-{{ $data[2] }}-500">{{ $data[0] }}</span>
                                 </div>
                             </label>
                             @endforeach
@@ -62,45 +62,45 @@
 
                     <!-- Description Editor -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-white text-sm font-semibold leading-normal">Deskripsi Detail</label>
-                        <div class="w-full rounded-lg border border-slate-700 bg-[#192433] overflow-hidden focus-within:ring-2 focus-within:ring-primary/50 focus-within:border-primary/50 transition-all">
+                        <label class="text-slate-900 dark:text-white text-sm font-semibold leading-normal">Deskripsi Detail</label>
+                        <div class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#192433] overflow-hidden focus-within:ring-2 focus-within:ring-primary/50 focus-within:border-primary/50 transition-all">
                             <!-- Fake Toolbar -->
-                            <div class="flex items-center gap-1 p-2 border-b border-slate-700 bg-[#233348] text-slate-400">
-                                <button type="button" class="p-1.5 hover:bg-[#192433] hover:text-white rounded transition-colors"><span class="material-symbols-outlined text-[20px]">format_bold</span></button>
-                                <button type="button" class="p-1.5 hover:bg-[#192433] hover:text-white rounded transition-colors"><span class="material-symbols-outlined text-[20px]">format_italic</span></button>
-                                <div class="w-px h-5 bg-slate-700 mx-1"></div>
-                                <button type="button" class="p-1.5 hover:bg-[#192433] hover:text-white rounded transition-colors"><span class="material-symbols-outlined text-[20px]">format_list_bulleted</span></button>
+                            <div class="flex items-center gap-1 p-2 border-b border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-[#233348] text-slate-500 dark:text-slate-400">
+                                <button type="button" class="p-1.5 hover:bg-slate-200 dark:hover:bg-[#192433] hover:text-slate-900 dark:hover:text-white rounded transition-colors"><span class="material-symbols-outlined text-[20px]">format_bold</span></button>
+                                <button type="button" class="p-1.5 hover:bg-slate-200 dark:hover:bg-[#192433] hover:text-slate-900 dark:hover:text-white rounded transition-colors"><span class="material-symbols-outlined text-[20px]">format_italic</span></button>
+                                <div class="w-px h-5 bg-slate-300 dark:bg-slate-700 mx-1"></div>
+                                <button type="button" class="p-1.5 hover:bg-slate-200 dark:hover:bg-[#192433] hover:text-slate-900 dark:hover:text-white rounded transition-colors"><span class="material-symbols-outlined text-[20px]">format_list_bulleted</span></button>
                             </div>
-                            <textarea name="description" id="description_input" class="w-full bg-[#192433] border-none text-white placeholder:text-slate-500 p-4 h-48 focus:ring-0 resize-y" placeholder="Jelaskan langkah-langkah yang menyebabkan masalah..." required>{{ old('description') }}</textarea>
+                            <textarea name="description" id="description_input" class="w-full bg-transparent border-none text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 p-4 h-48 focus:ring-0 resize-y" placeholder="Jelaskan langkah-langkah yang menyebabkan masalah..." required>{{ old('description') }}</textarea>
                         </div>
                         @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- File Attachment -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-white text-sm font-semibold leading-normal">Lampiran (Screenshot / Logs)</label>
+                        <label class="text-slate-900 dark:text-white text-sm font-semibold leading-normal">Lampiran (Screenshot / Logs)</label>
                         
                         <!-- Upload Area -->
-                        <div class="relative border-2 border-dashed border-slate-700 rounded-lg p-8 flex flex-col items-center justify-center text-slate-500 hover:bg-[#192433] hover:border-primary/50 hover:text-primary transition-all cursor-pointer group" id="upload_container">
+                        <div class="relative border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-8 flex flex-col items-center justify-center text-slate-500 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-[#192433] hover:border-primary/50 hover:text-primary transition-all cursor-pointer group bg-white dark:bg-transparent" id="upload_container">
                             <input type="file" name="evidence" id="evidence_input" accept="image/png, image/jpeg, application/pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
                             
                             <!-- Initial Prompt state -->
                             <div id="upload_prompt" class="flex flex-col items-center justify-center transition-opacity duration-300">
-                                <div class="p-3 bg-[#233348] rounded-full mb-3 group-hover:bg-[#233348]/80">
+                                <div class="p-3 bg-slate-100 dark:bg-[#233348] rounded-full mb-3 group-hover:bg-slate-200 dark:group-hover:bg-[#233348]/80 text-primary dark:text-slate-400 group-hover:text-primary">
                                     <span class="material-symbols-outlined text-3xl">cloud_upload</span>
                                 </div>
-                                <p class="text-sm font-medium">Klik untuk unggah atau seret file ke sini</p>
+                                <p class="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-primary">Klik untuk unggah atau seret file ke sini</p>
                                 <p class="text-xs text-slate-500/70 mt-1">PNG, JPG, PDF up to 2MB</p>
                             </div>
 
                             <!-- Preview State -->
                             <div id="upload_preview" class="hidden flex-col items-center justify-center w-full z-20">
-                                <img id="preview_image" src="" alt="Preview" class="max-h-48 rounded-lg shadow-md mb-3 object-contain hidden">
-                                <div id="preview_file_info" class="hidden flex items-center gap-2 mb-3 bg-[#233348] px-3 py-2 rounded-lg border border-slate-600">
+                                <img id="preview_image" src="" alt="Preview" class="max-h-48 rounded-lg shadow-md mb-3 object-contain hidden border border-slate-200 dark:border-slate-700">
+                                <div id="preview_file_info" class="hidden flex items-center gap-2 mb-3 bg-slate-100 dark:bg-[#233348] px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600">
                                     <span class="material-symbols-outlined text-red-400">picture_as_pdf</span>
-                                    <span id="preview_filename" class="text-sm text-white truncate max-w-[200px]">filename.pdf</span>
+                                    <span id="preview_filename" class="text-sm text-slate-900 dark:text-white truncate max-w-[200px]">filename.pdf</span>
                                 </div>
-                                <button type="button" id="remove_file_btn" class="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs font-bold rounded border border-red-500/20 transition-colors flex items-center gap-1">
+                                <button type="button" id="remove_file_btn" class="px-3 py-1 bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-500 text-xs font-bold rounded border border-red-200 dark:border-red-500/20 transition-colors flex items-center gap-1">
                                     <span class="material-symbols-outlined text-[14px]">delete</span>
                                     Hapus File
                                 </button>
@@ -114,7 +114,7 @@
                             <span class="material-symbols-outlined text-[20px]">send</span>
                             Kirim Tiket
                         </button>
-                        <a href="{{ route('user.dashboard') }}" class="flex items-center justify-center gap-2 bg-transparent border border-slate-700 hover:bg-[#192433] text-slate-400 hover:text-white font-medium py-3 px-6 rounded-lg transition-colors w-full md:w-auto">
+                        <a href="{{ route('user.dashboard') }}" class="flex items-center justify-center gap-2 bg-transparent border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-[#192433] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium py-3 px-6 rounded-lg transition-colors w-full md:w-auto">
                             Batal
                         </a>
                     </div>
@@ -123,10 +123,10 @@
                 <!-- Right Column: Sidebar / Smart Suggestions -->
                 <div class="lg:col-span-1 space-y-6">
                     <!-- AI Suggestion Card -->
-                    <div class="bg-[#192433] border border-slate-700 rounded-xl p-5 shadow-sm">
+                    <div class="bg-white dark:bg-[#192433] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
                         <div class="flex items-center gap-2 mb-4 text-primary">
                             <span class="material-symbols-outlined">auto_awesome</span>
-                            <h3 class="text-white text-base font-bold">Artikel yang Mungkin Membantu</h3>
+                            <h3 class="text-slate-900 dark:text-white text-base font-bold">Artikel yang Mungkin Membantu</h3>
                         </div>
                         <div class="flex flex-col gap-3" id="faq-suggestions">
                             <p class="text-xs text-slate-500 text-center italic py-2">Mulai mengetik judul atau pilih aset untuk melihat saran artikel...</p>
@@ -134,16 +134,16 @@
                     </div>
 
                     <!-- Announcements / Info -->
-                    <div class="bg-[#192433] border border-slate-700 rounded-xl p-5 shadow-sm">
-                        <h3 class="text-white text-base font-bold mb-4 flex items-center gap-2">
+                    <div class="bg-white dark:bg-[#192433] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+                        <h3 class="text-slate-900 dark:text-white text-base font-bold mb-4 flex items-center gap-2">
                             <span class="material-symbols-outlined text-yellow-500">campaign</span>
                             Info & Pengumuman
                         </h3>
                         <div class="space-y-4">
                             @forelse($announcements as $announcement)
-                                <div class="flex flex-col gap-1 pb-3 border-b border-slate-700 last:border-0 last:pb-0">
+                                <div class="flex flex-col gap-1 pb-3 border-b border-slate-100 dark:border-slate-700 last:border-0 last:pb-0">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm font-semibold text-white">{{ $announcement->title }}</span>
+                                        <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ $announcement->title }}</span>
                                         @if($announcement->type === 'maintenance')
                                             <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-500/10 text-orange-400 border border-orange-500/20">MAINTENANCE</span>
                                         @elseif($announcement->type === 'urgent')
@@ -152,14 +152,14 @@
                                             <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">INFO</span>
                                         @endif
                                     </div>
-                                    <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                                         {{ Str::limit($announcement->content, 80) }}
                                     </p>
-                                    <span class="text-[10px] text-slate-600 mt-1">{{ $announcement->created_at->diffForHumans() }}</span>
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-600 mt-1">{{ $announcement->created_at->diffForHumans() }}</span>
                                 </div>
                             @empty
                                 <div class="text-center py-4">
-                                     <span class="material-symbols-outlined text-slate-600 text-3xl mb-1">check_circle</span>
+                                     <span class="material-symbols-outlined text-slate-400 dark:text-slate-600 text-3xl mb-1">check_circle</span>
                                      <p class="text-xs text-slate-500">Sistem berjalan normal. Tidak ada pengumuman.</p>
                                 </div>
                             @endforelse
@@ -168,7 +168,7 @@
                 </div>
             </form>
             <!-- Footer Spacer -->
-            <div class="h-20"></div>
+
         </div>
     </div>
     
@@ -341,3 +341,4 @@
             });
         });
     </script>
+@endsection

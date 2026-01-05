@@ -1,5 +1,16 @@
 <!DOCTYPE html>
-<html class="dark" lang="id">
+<html class="dark" lang="id" x-data="{ 
+    darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    toggleTheme() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+        if (this.darkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
+}" x-init="$watch('darkMode', val => val ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -74,7 +85,9 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex flex-col overflow-x-hidden">
     <!-- Top Navigation Bar -->
-    @include('layouts.header')
+    <div class="order-first z-50 sticky top-0">
+        @include('layouts.header')
+    </div>
 
     <!-- Main Content -->
     <main class="flex-1 layout-container flex flex-col w-full max-w-[1280px] mx-auto px-4 md:px-10 py-6 md:py-8 gap-8">
@@ -84,11 +97,11 @@
     <!-- Simple Footer -->
     <footer class="border-t border-slate-200 dark:border-[#233348] mt-8 py-6 bg-white dark:bg-[#111822]">
         <div class="layout-container max-w-[1280px] mx-auto px-4 md:px-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-[#92a9c9]">
-            <p>© {{ date('Y') }} Smart IT Helpdesk. All rights reserved.</p>
+            <p>© {{ date('Y') }} Smart IT Helpdesk. Hak Cipta Dilindungi.</p>
             <div class="flex gap-4">
-                <a class="hover:text-primary" href="#">Privacy Policy</a>
-                <a class="hover:text-primary" href="#">Terms of Service</a>
-                <a class="hover:text-primary" href="#">Help</a>
+                <a class="hover:text-primary" href="#">Kebijakan Privasi</a>
+                <a class="hover:text-primary" href="#">Syarat Layanan</a>
+                <a class="hover:text-primary" href="#">Bantuan</a>
             </div>
         </div>
     </footer>

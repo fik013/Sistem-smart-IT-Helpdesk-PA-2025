@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html class="dark" lang="id" x-data="{ 
+    darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    toggleTheme() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+        if (this.darkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
+}" x-init="$watch('darkMode', val => val ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Forgot Password - Smart IT Helpdesk</title>
+    <title>Lupa Password - Smart IT Helpdesk</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -15,7 +27,7 @@
                     colors: {
                         "primary": "#136dec",
                         "background-light": "#f6f7f8",
-                        "background-dark": "#111822",
+                        "background-dark": "#101822",
                         "surface-dark": "#192433",
                         "border-dark": "#324867",
                         "text-secondary": "#92a9c9",
@@ -43,7 +55,13 @@
             <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Smart IT Helpdesk</h2>
         </div>
         <div class="flex flex-1 justify-end gap-8">
-            <!-- Header Links Removed -->
+            <button @click="toggleTheme()" class="flex items-center justify-center rounded-lg h-10 w-10 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#233348] transition-colors">
+                <span class="material-symbols-outlined text-[20px]" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
+            </button>
+            <div class="hidden md:flex items-center gap-6">
+                <a class="text-slate-600 dark:text-text-secondary hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Support</a>
+                <a class="text-slate-600 dark:text-text-secondary hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">System Status</a>
+            </div>
         </div>
     </header>
 
@@ -61,7 +79,7 @@
                     <div class="flex items-center justify-between mb-6">
                         <div>
                             <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Reset Password</h2>
-                            <p class="text-sm text-slate-500 dark:text-text-secondary mt-1">We'll send you a link to reset it.</p>
+                            <p class="text-sm text-slate-500 dark:text-text-secondary mt-1">Kami akan mengirimkan link reset.</p>
                         </div>
                         <div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                             <span class="material-symbols-outlined text-2xl">key</span>
@@ -80,24 +98,24 @@
                     @csrf
                      <!-- Email Field -->
                      <label class="flex flex-col gap-1.5">
-                        <span class="text-sm font-semibold text-slate-700 dark:text-white">Email Address</span>
+                        <span class="text-sm font-semibold text-slate-700 dark:text-white">Alamat Email</span>
                         <div class="relative flex items-center">
                             <span class="absolute left-3.5 text-slate-400 dark:text-text-secondary material-symbols-outlined text-[20px]">email</span>
-                            <input type="email" name="email" class="form-input w-full rounded-lg border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-[#111822] text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary pl-10 py-3 text-sm transition-all" placeholder="user@example.com" required autofocus value="{{ old('email') }}"/>
+                            <input type="email" name="email" class="form-input w-full rounded-lg border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-[#111822] text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary pl-10 py-3 text-sm transition-all" placeholder="user@contoh.com" required autofocus value="{{ old('email') }}"/>
                         </div>
                         @error('email') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </label>
 
                      <!-- Submit Button -->
                      <button type="submit" class="mt-2 w-full bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all shadow-lg shadow-primary/25 active:scale-[0.98] flex items-center justify-center gap-2">
-                        <span>Send Reset Link</span>
+                        <span>Kirim Link Reset</span>
                         <span class="material-symbols-outlined text-lg">send</span>
                     </button>
                     
                     <div class="text-center mt-2">
                         <a href="{{ route('login') }}" class="text-sm font-medium text-slate-500 hover:text-primary dark:text-text-secondary dark:hover:text-white transition-colors flex items-center justify-center gap-1">
                             <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-                            Back to Login
+                            Kembali ke Login
                         </a>
                     </div>
                  </form>

@@ -31,14 +31,26 @@
                     </div>
                 </div>
                 <!-- Chat Response Area (Hidden by default until interaction) -->
-                 <div x-show="messages.length > 0" class="mt-4 bg-white/10 backdrop-blur rounded-xl p-4 max-h-60 overflow-y-auto" style="display: none;">
-                    <template x-for="msg in messages">
-                        <div :class="msg.sender === 'user' ? 'text-right mb-2' : 'text-left mb-2'">
-                            <span :class="msg.sender === 'user' ? 'bg-primary text-white' : 'bg-[#233348] text-white'" class="inline-block px-3 py-2 rounded-lg text-sm max-w-[90%]">
-                                <span x-text="msg.text"></span>
-                            </span>
-                        </div>
-                    </template>
+                <!-- Chat Response Area (Hidden by default until interaction) -->
+                 <div x-show="messages.length > 0" class="mt-4 relative" style="display: none;">
+                    <div class="bg-white/10 backdrop-blur rounded-xl p-4 max-h-60 overflow-y-auto custom-scrollbar pr-2" x-ref="chatContainer" @scroll="isScrolled = $el.scrollTop > 10">
+                        <template x-for="msg in messages">
+                            <div :class="msg.sender === 'user' ? 'text-right mb-2' : 'text-left mb-2'">
+                                <span :class="msg.sender === 'user' ? 'bg-primary text-white' : 'bg-[#233348] text-white'" class="inline-block px-3 py-2 rounded-lg text-sm max-w-[90%] font-light leading-relaxed">
+                                    <span x-html="msg.text"></span>
+                                </span>
+                            </div>
+                        </template>
+                        <!-- Spacer for scroll visibility -->
+                        <div class="h-4"></div>
+                    </div>
+                    
+                    <!-- Scroll Hint -->
+                    <div x-show="messages.length >= 2 && !isScrolled" x-transition.opacity.duration.500ms class="absolute bottom-2 right-4 pointer-events-none">
+                         <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-black/40 text-[10px] text-white/80 backdrop-blur-md border border-white/10 animate-bounce">
+                            Scroll <span class="material-symbols-outlined text-[12px]">arrow_downward</span>
+                         </span>
+                    </div>
                  </div>
             </div>
         </div>
@@ -281,6 +293,7 @@
                 messages: [],
                 userInput: '',
                 loading: false,
+                isScrolled: false,
                 async sendMessage() {
                     if (this.userInput.trim() === '') return;
                     const text = this.userInput;

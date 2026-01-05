@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html class="dark" lang="id" x-data="{ 
+    darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    toggleTheme() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+        if (this.darkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
+}" x-init="$watch('darkMode', val => val ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Smart IT Helpdesk - Login</title>
+    <title>Smart IT Helpdesk - Masuk</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -15,7 +27,7 @@
                     colors: {
                         "primary": "#136dec",
                         "background-light": "#f6f7f8",
-                        "background-dark": "#111822",
+                        "background-dark": "#101822",
                         "surface-dark": "#192433",
                         "border-dark": "#324867",
                         "text-secondary": "#92a9c9",
@@ -43,10 +55,9 @@
             <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Smart IT Helpdesk</h2>
         </div>
         <div class="flex flex-1 justify-end gap-8">
-            <div class="flex items-center gap-6">
-                <a class="text-slate-600 dark:text-text-secondary hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Support</a>
-                <a class="text-slate-600 dark:text-text-secondary hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">System Status</a>
-            </div>
+            <button @click="toggleTheme()" class="flex items-center justify-center rounded-lg h-10 w-10 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#233348] transition-colors">
+                <span class="material-symbols-outlined text-[20px]" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
+            </button>
         </div>
     </header>
 
@@ -66,24 +77,32 @@
                     <div class="flex flex-col gap-4">
                         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 w-fit border border-primary/20">
                             <span class="size-2 rounded-full bg-green-500 animate-pulse"></span>
-                            <span class="text-xs font-medium text-primary uppercase tracking-wide">System Operational</span>
+                            <span class="text-xs font-medium text-primary uppercase tracking-wide">Sistem Operasional</span>
                         </span>
                         <h1 class="text-4xl lg:text-5xl font-black leading-tight tracking-[-0.033em] text-slate-900 dark:text-white">
                             Selamat Datang
                         </h1>
                         <p class="text-slate-500 dark:text-text-secondary text-lg font-normal leading-relaxed">
-                            Selesaikan permasalahan IT Anda dengan cepat dan efektif disini.
+                            Selesaikan permasalahan IT Anda dengan cepat dan efektif di sini.
                         </p>
                     </div>
                     <div class="flex items-center gap-4 mt-4">
                         <div class="flex -space-x-3">
-                             <!-- Using generic user avatars usually, here using placeholders or remove -->
-                             <div class="w-10 h-10 rounded-full border-2 border-white dark:border-background-dark bg-gray-500"></div>
-                             <div class="w-10 h-10 rounded-full border-2 border-white dark:border-background-dark bg-gray-600"></div>
-                             <div class="w-10 h-10 rounded-full border-2 border-white dark:border-background-dark bg-gray-700"></div>
-                             <div class="w-10 h-10 rounded-full border-2 border-white dark:border-background-dark bg-surface-dark flex items-center justify-center text-xs font-bold text-white">2k+</div>
+                            @php
+                                $recentUsers = \App\Models\User::orderBy('created_at', 'desc')->take(3)->get();
+                            @endphp
+                            @foreach($recentUsers as $recentUser)
+                                @if($recentUser->avatar)
+                                    <img src="{{ asset('storage/' . $recentUser->avatar) }}" alt="{{ $recentUser->name }}" class="w-10 h-10 rounded-full border-2 border-white dark:border-background-dark object-cover" title="{{ $recentUser->name }}">
+                                @else
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($recentUser->name) }}&background=random" alt="{{ $recentUser->name }}" class="w-10 h-10 rounded-full border-2 border-white dark:border-background-dark" title="{{ $recentUser->name }}">
+                                @endif
+                            @endforeach
+                             <div class="w-10 h-10 rounded-full border-2 border-white dark:border-background-dark bg-surface-dark flex items-center justify-center text-xs font-bold text-white tracking-tighter">
+                                {{ \App\Models\User::count() }}+
+                             </div>
                         </div>
-                        <p class="text-sm font-medium text-slate-600 dark:text-text-secondary">Tickets resolved today</p>
+                        <p class="text-sm font-medium text-slate-600 dark:text-text-secondary">{{ \App\Models\Ticket::whereDate('updated_at', now())->where('status', 'completed')->count() }} Tiket selesai hari ini</p>
                     </div>
                 </div>
 
@@ -93,8 +112,8 @@
                         <div class="p-8 pb-0">
                             <div class="flex items-center justify-between mb-6">
                                 <div>
-                                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Log In</h2>
-                                    <p class="text-sm text-slate-500 dark:text-text-secondary mt-1">Enter your credentials</p>
+                                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Masuk</h2>
+                                    <p class="text-sm text-slate-500 dark:text-text-secondary mt-1">Masukkan akun Anda</p>
                                 </div>
                                 <div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                                     <span class="material-symbols-outlined text-2xl">lock_person</span>
@@ -120,7 +139,7 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-sm font-semibold text-slate-700 dark:text-white">Password</span>
                                     @if (Route::has('password.request'))
-                                    <a class="text-xs font-medium text-primary hover:underline" href="{{ route('password.request') }}">Forgot password?</a>
+                                    <a class="text-xs font-medium text-primary hover:underline" href="{{ route('password.request') }}">Lupa password?</a>
                                     @endif
                                 </div>
                                 <div class="relative flex items-center group">
@@ -136,7 +155,7 @@
 
                             <!-- Submit Button -->
                             <button type="submit" class="mt-2 w-full bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all shadow-lg shadow-primary/25 active:scale-[0.98] flex items-center justify-center gap-2">
-                                <span>Sign In</span>
+                                <span>Masuk</span>
                                 <span class="material-symbols-outlined text-lg">arrow_forward</span>
                             </button>
 
@@ -144,7 +163,7 @@
                             <div class="flex items-start gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 mt-4">
                                 <span class="material-symbols-outlined text-primary text-xl mt-0.5">verified_user</span>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    This system is monitored. Unauthorized access attempts are logged.
+                                    Sistem ini dilakukan perawatan secara berkala untuk menjamin keamanan data anda.
                                 </p>
                             </div>
                         </form>

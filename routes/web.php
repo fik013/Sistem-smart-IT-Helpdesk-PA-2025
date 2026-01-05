@@ -48,7 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/inventory/{id}', [App\Http\Controllers\User\InventoryController::class, 'show'])->name('user.inventory.show');
         Route::get('/faq', [App\Http\Controllers\User\FaqController::class, 'index'])->name('user.faq');
         Route::get('/faq/search', [App\Http\Controllers\User\FaqController::class, 'search'])->name('user.faq.search');
-        Route::post('/chatbot/ask', [ChatbotController::class, 'ask'])->name('chatbot.ask');
+        Route::post('/chatbot/ask', [ChatbotController::class, 'ask'])->name('chatbot.ask')->middleware('throttle:10,1');
         Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
         Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
         Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');

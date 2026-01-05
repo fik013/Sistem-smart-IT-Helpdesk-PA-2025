@@ -1,5 +1,16 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ 
+    darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    toggleTheme() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+        if (this.darkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
+}" x-init="$watch('darkMode', val => val ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark')); if(darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,46 +21,53 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
         <!-- Scripts -->
-        <!-- Scripts -->
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-        <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
-
-        <style>
-            body {
-                font-family: 'Outfit', sans-serif;
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <script>
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            "primary": "#136dec",
+                            "background-light": "#f6f7f8",
+                            "background-dark": "#111822",
+                            "surface-dark": "#192433",
+                            "border-dark": "#324867",
+                            "text-secondary": "#92a9c9",
+                        },
+                        fontFamily: {
+                            "display": ["Inter", "sans-serif"]
+                        },
+                    },
+                },
             }
-            .animated-bg {
-                background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #0f172a);
-                background-size: 400% 400%;
-                animation: gradient 15s ease infinite;
-            }
-            @keyframes gradient {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-            }
-        </style>
+        </script>
     </head>
-    <body class="font-sans text-gray-100 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 animated-bg relative overflow-hidden">
+    <body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 relative overflow-hidden">
             
-            <!-- Decorational Blobs -->
-            <div class="absolute top-0 left-0 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-            <div class="absolute top-0 right-0 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-            <div class="absolute -bottom-32 left-20 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+            <!-- Abstract Background Decoration -->
+            <div class="absolute inset-0 z-0 pointer-events-none opacity-20 dark:opacity-40">
+                <div class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-primary rounded-full blur-[120px] opacity-20"></div>
+                <div class="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-500 rounded-full blur-[120px] opacity-20"></div>
+            </div>
 
-            <div class="relative z-10 w-full sm:max-w-md mt-6 px-6 py-8 glass-card overflow-hidden sm:rounded-xl">
+            <!-- Theme Toggle Absolute -->
+            <button @click="toggleTheme()" class="absolute top-4 right-4 z-50 p-2 rounded-full bg-white dark:bg-surface-dark shadow-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#233348] transition-colors">
+                 <span class="material-symbols-outlined text-[20px]" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
+            </button>
+
+            <div class="relative z-10 w-full sm:max-w-md mt-6 px-6 py-8 bg-white dark:bg-surface-dark shadow-2xl border border-gray-200 dark:border-border-dark sm:rounded-xl overflow-hidden">
                  <div class="flex justify-center mb-6">
                     <a href="/">
-                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition duration-300">
+                        <div class="size-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
                              <!-- Simple Logo Icon -->
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                              </svg>
+                             <span class="material-symbols-outlined text-3xl">support_agent</span>
                         </div>
                     </a>
                 </div>

@@ -15,84 +15,124 @@ class ChatbotController extends Controller
         $user = Auth::user();
         $message = $request->input('message');
         
-        // 1. Collect Context: User Inventory
-        $inventoryList = $user->inventories->map(function($item) {
+        // 1. Collect Context: User & Department Inventory
+        // Fetch personal assets
+        $personalAssets = \App\Models\Inventory::where('user_id', $user->id)
+            ->with('category')
+            ->get();
+            
+        // Fetch department assets (shared assets usually have null user_id but a valid department_id)
+        // Since User has 'department' string, we need to find the Department ID first or join.
+        $departmentAssets = collect();
+        if ($user->department) {
+            $departmentAssets = \App\Models\Inventory::whereHas('department', function($q) use ($user) {
+                $q->where('name', $user->department);
+            })->where('user_id', null) // Only fetch shared departmental assets (not assigned to specific other users)
+              ->with('category')
+              ->get();
+        }
+
+        $allAssets = $personalAssets->merge($departmentAssets);
+
+        $inventoryList = $allAssets->map(function($item) {
             $category = $item->category->name ?? 'Unknown Device';
-            return "- {$item->item_name} (Type: {$category}, Serial: {$item->serial_number}, Status: {$item->status})";
+            $desc = $item->description ? ", Deskripsi: {$item->description}" : "";
+            $ownerType = $item->user_id ? "(Milik Pribadi)" : "(Aset Departemen)";
+            return "- {$item->item_name} {$ownerType} (Tipe: {$category}, Serial: {$item->serial_number}, Status: {$item->status}{$desc})";
         })->implode("\n");
 
         if (empty($inventoryList)) {
-            $inventoryList = "No registered assets found for this user.";
+            $inventoryList = "Tidak ada aset terdaftar untuk pengguna atau departemen ini.";
+        }
+
+        // 1b. Collect Context: Knowledge Base (FAQ)
+        // Fetch all published FAQs (Assumes reasonable number of FAQs, otherwise vector search is needed)
+        $faqs = \App\Models\Faq::where('is_published', true)->get();
+        $faqContext = $faqs->map(function($faq) {
+            return "Q: {$faq->question}\nA: {$faq->answer}";
+        })->implode("\n\n");
+        
+        if (empty($faqContext)) {
+            $faqContext = "Tidak ada data FAQ tersedia.";
         }
 
         // 2. Construct System Prompt
-        $systemInstruction = "You are an intelligent IT Helpdesk Assistant for 'Sistem Smart IT Helpdesk'. 
-        Your goal is to assist employees with technical issues, troubleshooting, and IT-related inquiries.
+        $systemContext = "Anda adalah Asisten IT Helpdesk Cerdas untuk 'Sistem Smart IT Helpdesk'.
+        Tujuan Anda adalah membantu karyawan dengan masalah teknis, troubleshooting, dan pertanyaan seputar IT.
         
-        [User Context]
-        Name: {$user->name}
-        Department: {$user->department}
-        assigned Assets/Inventory:
+        [Konteks Pengguna]
+        Nama: {$user->name}
+        Departemen: {$user->department}
+        Aset/Inventaris yang Dimiliki:
         {$inventoryList}
         
-        [Strict Guidelines]
-        1. Context Awareness: You know who the user is and what devices they have. If they ask about 'my laptop' or 'printer', refer to their specific assets listed above (e.g., 'For your Asus ROG...').
-        2. Scope Limitation: ONLY answer questions related to IT, computers, software, hardware, networking, and technical troubleshooting. If the user asks about non-IT topics (like cooking, weather, general knowledge unrelated to work), politely decline and state you are an IT assistant.
-        3. Tone: Professional, helpful, concise, and friendly.
-        4. Escalation: If a problem seems physical/hardware related or you cannot solve it, suggest they 'Create a Ticket' for a human technician.
-        5. Language: Reply in the same language as the user (mainly Indonesian).
+        [Basis Pengetahuan (FAQ & Kebijakan)]
+        Gunakan informasi berikut untuk menjawab pertanyaan umum (akun, kebijakan, prosedur):
+        {$faqContext}
         
-        User Query: {$message}";
+        [Pedoman Ketat]
+        1. Kesadaran Konteks: Anda mengetahui siapa pengguna ini dan perangkat apa yang mereka miliki.
+        2. Prioritas Data: Jika pertanyaan ada di FAQ, utamakan jawaban dari FAQ tersebut. Jika terkait hardware, cek inventaris user.
+        3. Batasan Lingkup: HANYA jawab pertanyaan seputar IT, komputer, software, hardware, jaringan, dan masalah teknis.
+        4. Nada Bicara: Profesional, membantu, ringkas, dan ramah.
+        5. Eskalasi: Jika masalahnya rumit atau memerlukan perbaikan fisik, sarankan untuk 'Buat Tiket'.
+        6. Format: Gunakan poin-poin (bullet points) untuk langkah-langkah. Jawaban harus pendek dan to the point (hindari paragraf panjang).
+        7. Bahasa: Jawablah dalam Bahasa Indonesia.";
 
-        // 3. Call Gemini API
-        $apiKey = env('GEMINI_API_KEY');
+        // 3. Call Groq API
+        $apiKey = env('GROQ_API_KEY');
 
         if (!$apiKey) {
             return response()->json([
-                'response' => "System Error: AI configuration missing (API Key). Please contact administrator.",
+                'response' => "System Error: AI configuration missing (GROQ_API_KEY). Please contact administrator.",
                 'suggest_ticket' => true
             ]);
         }
 
         try {
+            $url = "https://api.groq.com/openai/v1/chat/completions";
+            
             $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type' => 'application/json',
-            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
-                'contents' => [
-                    [
-                        'parts' => [
-                            ['text' => $systemInstruction]
-                        ]
-                    ]
+            ])->post($url, [
+                'model' => 'llama-3.3-70b-versatile',
+                'messages' => [
+                    ['role' => 'system', 'content' => $systemContext],
+                    ['role' => 'user', 'content' => $message]
                 ],
-                'generationConfig' => [
-                    'temperature' => 0.7,
-                    'maxOutputTokens' => 500,
-                ]
+                'temperature' => 0.7,
+                'max_tokens' => 1000,
             ]);
 
             if ($response->successful()) {
                 $data = $response->json();
-                $aiReply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat menghasilkan jawaban saat ini.';
+                $aiReply = $data['choices'][0]['message']['content'] ?? 'Maaf, saya tidak dapat menghasilkan jawaban saat ini.';
                 
-                // Remove formatting like ** if desired, or keep markdown if frontend supports it. 
-                // The frontend seems to just display text, markdown support is unknown but usually safe to keep basic text.
-                // We'll keep it raw for now.
+                // Convert Markdown to specific HTML for the frontend
+                $aiReply = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $aiReply); // Bold
+                $aiReply = nl2br($aiReply); // Newlines
 
-                Log::info('Gemini API Success');
                 return response()->json([
                     'response' => $aiReply,
-                    'suggest_ticket' => true // logic could be refined based on AI response keywords
+                    'suggest_ticket' => true 
                 ]);
             } else {
-                Log::error('Gemini API Error Status: ' . $response->status());
-                Log::error('Gemini API Error Body: ' . $response->body());
+                Log::error('Groq API Error Status: ' . $response->status());
+                Log::error('Groq API Error Body: ' . $response->body());
+
+                if ($response->status() === 429) {
+                     return response()->json([
+                        'response' => "Layanan AI sedang sibuk (Limit Kuota Tercapai). Mohon tunggu sebentar sebelum mencoba lagi.",
+                        'suggest_ticket' => false
+                    ]);
+                }
+
                 return response()->json([
                     'response' => "Maaf, terjadi gangguan pada layanan AI (Status: " . $response->status() . "). Silakan coba lagi atau buat tiket.",
                     'suggest_ticket' => true
                 ]);
             }
-
         } catch (\Exception $e) {
             Log::error('Chatbot Exception: ' . $e->getMessage());
             return response()->json([
@@ -100,5 +140,7 @@ class ChatbotController extends Controller
                 'suggest_ticket' => true
             ]);
         }
+
+
     }
 }
