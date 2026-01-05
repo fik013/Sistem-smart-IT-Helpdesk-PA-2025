@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Services\SawService;
 
+use App\Notifications\TicketCreatedNotification;
+
 class TicketController extends Controller
 {
     public function index(Request $request)
@@ -94,6 +96,10 @@ class TicketController extends Controller
         // Calculate SAW Score
         $score = $sawService->calculateScore($ticket);
         $ticket->update(['saw_score' => $score]);
+
+        // Notify Admins
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new TicketCreatedNotification($ticket));
 
         return redirect()->route('tickets.index')->with('success', 'Ticket created successfully!');
     }

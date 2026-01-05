@@ -65,11 +65,110 @@
                 <a class="{{ request()->routeIs('tickets.*') ? 'text-slate-900 dark:text-white text-sm font-bold leading-normal border-b-2 border-primary' : 'text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary dark:hover:text-white transition-colors' }}" href="{{ route('tickets.index') }}">Tiket Saya</a>
                 <a class="{{ request()->routeIs('user.inventory') ? 'text-slate-900 dark:text-white text-sm font-bold leading-normal border-b-2 border-primary' : 'text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary dark:hover:text-white transition-colors' }}" href="{{ route('user.inventory') }}">Inventaris</a>
             </div>
-            <button class="relative flex items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-slate-100 dark:bg-[#233348] text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-[#324867] transition-colors">
-                <span class="material-symbols-outlined text-[20px]">notifications</span>
-                <!-- Badge Notification logic could go here -->
-                <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"></span>
-            </button>
+            <div class="relative" x-data="{ notifOpen: false }">
+                <button @click="notifOpen = !notifOpen" class="relative flex items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-slate-100 dark:bg-[#233348] text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-[#324867] transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">notifications</span>
+                    @if(auth()->check() && auth()->user()->unreadNotifications->count() > 0)
+                        <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                    @endif
+                </button>
+                
+                <div x-show="notifOpen" 
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95"
+                     @click.away="notifOpen = false"
+                     class="absolute right-0 mt-2 w-80 bg-white dark:bg-[#192433] rounded-xl shadow-xl border border-slate-100 dark:border-[#324867] overflow-hidden z-[60]" 
+                     style="display: none;">
+                    
+                    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-[#324867]">
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white">Notifikasi</h3>
+                        @if(auth()->check() && auth()->user()->unreadNotifications->count() > 0)
+                            <form action="{{ route('notifications.readAll') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="text-xs text-primary hover:text-blue-600 font-medium transition-colors">Tandai dibaca</button>
+                            </form>
+                        @endif
+                    </div>
+
+                    <div class="max-h-[400px] overflow-y-auto">
+                        @if(auth()->check())
+                        
+                        <!-- Unread Notifications -->
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                            <div class="px-4 py-2 bg-slate-50 dark:bg-[#1f2937] border-b border-slate-100 dark:border-[#324867]">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Belum Dibaca</p>
+                            </div>
+                            @foreach(auth()->user()->unreadNotifications as $notification)
+                                <a href="{{ route('notifications.read', $notification->id) }}" class="block px-4 py-3 hover:bg-slate-50 dark:hover:bg-[#233348] transition-colors border-b border-slate-50 dark:border-[#324867] last:border-0 group bg-white dark:bg-[#192433]">
+                                    <div class="flex gap-3">
+                                        <div class="flex-shrink-0 mt-1">
+                                             @if(($notification->data['type'] ?? '') == 'ticket_created')
+                                                <span class="material-symbols-outlined text-green-500 text-[20px]">check_circle</span>
+                                             @elseif(($notification->data['type'] ?? '') == 'ticket_status_updated')
+                                                <span class="material-symbols-outlined text-blue-500 text-[20px]">update</span>
+                                             @elseif(($notification->data['type'] ?? '') == 'announcement')
+                                                <span class="material-symbols-outlined text-yellow-500 text-[20px]">campaign</span>
+                                             @else
+                                                <span class="material-symbols-outlined text-primary text-[20px]">notifications</span>
+                                             @endif
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors">{{ $notification->data['title'] ?? 'Notifikasi Baru' }}</p>
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">{{ $notification->data['message'] ?? '' }}</p>
+                                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5">{{ $notification->created_at->diffForHumans() }}</p>
+                                        </div>
+                                        <div class="flex-shrink-0 self-center">
+                                            <div class="h-2 w-2 rounded-full bg-blue-500"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        @endif
+
+                        <!-- Read Notifications -->
+                        @if(auth()->user()->readNotifications->count() > 0)
+                            <div class="px-4 py-2 bg-slate-50 dark:bg-[#1f2937] border-b border-slate-100 dark:border-[#324867] {{ auth()->user()->unreadNotifications->count() > 0 ? 'border-t' : '' }}">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Sudah Dibaca</p>
+                            </div>
+                            @foreach(auth()->user()->readNotifications->take(5) as $notification)
+                                <a href="{{ $notification->data['url'] ?? '#' }}" class="block px-4 py-3 hover:bg-slate-50 dark:hover:bg-[#233348] transition-colors border-b border-slate-50 dark:border-[#324867] last:border-0 group opacity-75 grayscale-[0.3]">
+                                    <div class="flex gap-3">
+                                        <div class="flex-shrink-0 mt-1">
+                                             @if(($notification->data['type'] ?? '') == 'ticket_created')
+                                                <span class="material-symbols-outlined text-slate-400 text-[20px]">check_circle</span>
+                                             @elseif(($notification->data['type'] ?? '') == 'ticket_status_updated')
+                                                <span class="material-symbols-outlined text-slate-400 text-[20px]">update</span>
+                                             @elseif(($notification->data['type'] ?? '') == 'announcement')
+                                                <span class="material-symbols-outlined text-slate-400 text-[20px]">campaign</span>
+                                             @else
+                                                <span class="material-symbols-outlined text-slate-400 text-[20px]">notifications</span>
+                                             @endif
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ $notification->data['title'] ?? 'Notifikasi' }}</p>
+                                            <p class="text-xs text-slate-500 dark:text-slate-500 mt-0.5 line-clamp-2">{{ $notification->data['message'] ?? '' }}</p>
+                                            <p class="text-[10px] text-slate-400 mt-1.5">{{ $notification->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        @endif
+
+                        @if(auth()->user()->notifications->count() == 0)
+                            <div class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">
+                                <span class="material-symbols-outlined text-3xl mb-2 opacity-50">notifications_off</span>
+                                <p class="text-xs">Tidak ada notifikasi.</p>
+                            </div>
+                        @endif
+                        
+                        @endif
+                    </div>
+                </div>
+            </div>
             
             <!-- User Dropdown -->
             <div class="relative">

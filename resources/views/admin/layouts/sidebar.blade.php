@@ -13,6 +13,10 @@
             <a class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg {{ request()->routeIs('admin.tickets.*') ? 'bg-primary/10 dark:bg-primary/20 text-primary dark:text-white border border-primary/20' : 'text-slate-500 dark:text-[#92a9c9] hover:bg-slate-100 dark:hover:bg-[#233348] hover:text-[#101822] dark:hover:text-white transition-colors group' }}" href="{{ route('admin.tickets.index') }}">
                 <span class="material-symbols-outlined {{ request()->routeIs('admin.tickets.*') ? 'text-primary fill-1' : 'group-hover:text-[#101822] dark:group-hover:text-white transition-colors' }}">confirmation_number</span>
                 <p class="sidebar-text text-sm font-medium leading-normal whitespace-nowrap overflow-hidden transition-all duration-300">Kelola Tiket</p>
+                @php $pendingCount = \App\Models\Ticket::where('status', 'pending')->count(); @endphp
+                @if($pendingCount > 0)
+                    <span class="ml-auto bg-red-500 text-white text-[10px] font-bold h-5 min-w-[20px] px-1.5 flex items-center justify-center rounded-full shadow-sm">{{ $pendingCount }}</span>
+                @endif
             </a>
             
             <!-- Inventory Link -->

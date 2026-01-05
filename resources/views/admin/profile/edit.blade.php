@@ -64,6 +64,18 @@
                 @enderror
             </div>
 
+            <!-- Phone Number -->
+            <div class="flex flex-col gap-2">
+                <label for="phone_number" class="text-slate-700 dark:text-white text-sm font-medium">Nomor WhatsApp (Kontak IT Support)</label>
+                <input type="text" name="phone_number" id="phone_number" 
+                       class="w-full rounded-lg border border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all @error('phone_number') border-red-500 @enderror"
+                       value="{{ old('phone_number', $user->phone_number) }}" placeholder="Contoh: 628123456789 (Gunakan kode negara)">
+                <p class="text-xs text-slate-500 dark:text-[#92a9c9]">Nomor yang dimasukkan adalah nomor telepon aktif jika user ingin menghubungi anda selaku Tim IT.</p>
+                @error('phone_number')
+                    <p class="text-red-400 text-xs">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Email (Read Only) -->
             <div class="flex flex-col gap-2">
                 <label for="email" class="text-slate-700 dark:text-white text-sm font-medium">Email Address</label>

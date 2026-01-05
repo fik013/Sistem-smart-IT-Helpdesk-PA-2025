@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 use App\Services\SawService;
 
+use App\Notifications\TicketStatusUpdatedNotification;
+
 class TicketController extends Controller
 {
     /**
@@ -56,6 +58,11 @@ class TicketController extends Controller
         ]);
 
         $ticket->update($validated);
+
+        // Notify user
+        if ($ticket->user) {
+            $ticket->user->notify(new TicketStatusUpdatedNotification($ticket));
+        }
 
         return redirect()->route('admin.tickets.index')->with('success', 'Status tiket berhasil diperbarui.');
     }

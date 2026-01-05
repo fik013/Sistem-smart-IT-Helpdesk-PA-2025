@@ -13,6 +13,8 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -51,45 +53,75 @@
                 </button>
             </div>
             <div class="flex flex-1 justify-end gap-8">
-                <div class="flex gap-2 relative">
-                    <button onclick="document.getElementById('notification-popup').classList.toggle('hidden')" class="relative flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 dark:bg-[#233348] text-slate-600 dark:text-white hover:bg-slate-200 dark:hover:bg-[#324867] transition-colors">
+                <div class="flex gap-2 relative" x-data="{ notifOpen: false }">
+                    <button @click="notifOpen = !notifOpen" class="relative flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 dark:bg-[#233348] text-slate-600 dark:text-white hover:bg-slate-200 dark:hover:bg-[#324867] transition-colors">
                         <span class="material-symbols-outlined">notifications</span>
-                        @php
-                            $pendingCount = \App\Models\Ticket::where('status', 'pending')->count();
-                        @endphp
-                        @if($pendingCount > 0)
+                        @if(auth()->user()->unreadNotifications->count() > 0)
                             <span class="absolute top-2 right-2 flex h-2.5 w-2.5">
                               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                               <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                             </span>
                         @endif
                     </button>
+                    
                     <!-- Notification Popup -->
-                    <div id="notification-popup" class="hidden absolute top-12 right-0 w-80 z-50 rounded-xl border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e] shadow-xl overflow-hidden">
+                    <div x-show="notifOpen" 
+                         @click.away="notifOpen = false"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         class="absolute top-12 right-0 w-80 z-50 rounded-xl border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e] shadow-xl overflow-hidden"
+                         style="display: none;">
+                        
                         <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-[#233348]">
-                            <h3 class="font-bold text-[#101822] dark:text-white">Notifications</h3>
-                            @if($pendingCount > 0)
-                                <span class="bg-primary/20 text-primary text-xs font-bold px-2 py-0.5 rounded-full">{{ $pendingCount }} New</span>
+                            <h3 class="font-bold text-[#101822] dark:text-white">Notifikasi</h3>
+                            @if(auth()->user()->unreadNotifications->count() > 0)
+                                <form action="{{ route('notifications.readAll') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="text-xs text-primary hover:text-blue-600 font-bold hover:underline">Tandai dibaca</button>
+                                </form>
                             @endif
                         </div>
-                        <div class="max-h-64 overflow-y-auto">
-                            @if($pendingCount > 0)
-                                @foreach(\App\Models\Ticket::where('status', 'pending')->latest()->take(5)->get() as $ticket)
-                                    <a href="{{ route('admin.tickets.show', $ticket) }}" class="flex flex-col gap-1 p-4 border-b border-slate-200 dark:border-[#233348] hover:bg-slate-50 dark:hover:bg-[#233348]/50 transition-colors">
-                                        <div class="flex justify-between items-start">
-                                            <span class="font-medium text-[#101822] dark:text-white text-sm line-clamp-1">{{ $ticket->subject }}</span>
-                                            <span class="text-[10px] text-slate-500 dark:text-[#92a9c9] whitespace-nowrap">{{ $ticket->created_at->diffForHumans(null, true, true) }}</span>
+                        
+                        <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
+                            @forelse(auth()->user()->unreadNotifications as $notification)
+                                <a href="{{ route('notifications.read', $notification->id) }}" class="flex flex-col gap-1 p-4 border-b border-slate-100 dark:border-[#233348] bg-blue-50/50 dark:bg-blue-900/10 hover:bg-slate-50 dark:hover:bg-[#233348]/50 transition-colors">
+                                    <div class="flex justify-between items-start gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-sm text-primary">{{ $notification->data['icon'] ?? 'notifications' }}</span>
+                                            <span class="font-bold text-[#101822] dark:text-white text-sm line-clamp-1">{{ $notification->data['message'] ?? 'Notification' }}</span>
                                         </div>
-                                        <p class="text-xs text-slate-500 dark:text-[#92a9c9]">New ticket from {{ $ticket->user->name }}</p>
+                                        <span class="text-[10px] text-slate-500 dark:text-[#92a9c9] whitespace-nowrap flex-shrink-0">{{ $notification->created_at->diffForHumans(null, true, true) }}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 dark:text-[#92a9c9] pl-6 line-clamp-2">Baru saja</p>
+                                </a>
+                            @empty
+                                @if(auth()->user()->readNotifications->isEmpty())
+                                    <div class="p-8 text-center flex flex-col items-center gap-2 text-slate-400 dark:text-[#92a9c9]">
+                                        <span class="material-symbols-outlined text-4xl opacity-50">notifications_off</span>
+                                        <span class="text-sm">Belum ada notifikasi</span>
+                                    </div>
+                                @endif
+                            @endforelse
+
+                            @if(auth()->user()->readNotifications->isNotEmpty())
+                                <div class="px-4 py-2 bg-slate-50 dark:bg-[#1f2937] text-xs font-bold text-slate-500 uppercase tracking-wider border-y border-slate-100 dark:border-[#233348]">
+                                    Terbaca
+                                </div>
+                                @foreach(auth()->user()->readNotifications->take(5) as $notification)
+                                    <a href="{{ $notification->data['url'] ?? '#' }}" class="flex flex-col gap-1 p-4 border-b border-slate-100 dark:border-[#233348] hover:bg-slate-50 dark:hover:bg-[#233348]/50 transition-colors opacity-75 hover:opacity-100">
+                                        <div class="flex justify-between items-start gap-2">
+                                            <div class="flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-sm text-slate-400">{{ $notification->data['icon'] ?? 'notifications' }}</span>
+                                                <span class="font-medium text-slate-700 dark:text-slate-300 text-sm line-clamp-1">{{ $notification->data['message'] ?? 'Notification' }}</span>
+                                            </div>
+                                            <span class="text-[10px] text-slate-400 dark:text-slate-600 whitespace-nowrap flex-shrink-0">{{ $notification->created_at->diffForHumans(null, true, true) }}</span>
+                                        </div>
                                     </a>
                                 @endforeach
-                                <div class="p-2 text-center">
-                                    <a href="{{ route('admin.tickets.index') }}" class="text-xs text-primary hover:text-blue-400 font-medium">View all pending tickets</a>
-                                </div>
-                            @else
-                                <div class="p-8 text-center text-slate-500 dark:text-[#92a9c9] text-sm">
-                                    No new notifications
-                                </div>
                             @endif
                         </div>
                     </div>
@@ -97,10 +129,6 @@
                     <button id="themeToggle" class="flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 dark:bg-[#233348] text-slate-600 dark:text-white hover:bg-slate-200 dark:hover:bg-[#324867] transition-colors">
                         <span class="material-symbols-outlined" id="themeIcon">light_mode</span>
                     </button>
-                    <!-- Settings Button (Optional, keeping it for now if needed, or remove if redundant) -->
-                    <!-- <button class="flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 dark:bg-[#233348] text-slate-600 dark:text-white hover:bg-slate-200 dark:hover:bg-[#324867] transition-colors">
-                        <span class="material-symbols-outlined">settings</span>
-                    </button> -->
                 </div>
                 <div class="relative">
                     <button onclick="document.getElementById('profile-popup').classList.toggle('hidden')" class="flex items-center gap-2 focus:outline-none transition-transform active:scale-95">

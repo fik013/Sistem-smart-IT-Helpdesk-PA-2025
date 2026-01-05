@@ -40,7 +40,13 @@ class AnnouncementController extends Controller
              $data['is_active'] = $request->has('is_active');
         }
 
-        Announcement::create($data);
+        $announcement = Announcement::create($data);
+
+        // Notify All Users
+        \Illuminate\Support\Facades\Notification::send(
+            \App\Models\User::all(), 
+            new \App\Notifications\NewAnnouncementNotification($announcement)
+        );
 
         return redirect()->route('admin.announcements.index')->with('success', 'Pengumuman berhasil dibuat.');
     }

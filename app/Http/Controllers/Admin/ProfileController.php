@@ -23,11 +23,13 @@ class ProfileController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'phone_number' => ['nullable', 'string', 'max:20'],
             'avatar' => ['nullable', 'image', 'max:1024'], // Max 1MB
             'password' => ['nullable', 'confirmed', Password::defaults()],
         ]);
 
         $user->name = $validated['name'];
+        $user->phone_number = $validated['phone_number'];
 
         if ($request->hasFile('avatar')) {
             // Delete old avatar if exists

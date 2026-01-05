@@ -227,21 +227,38 @@
             </div>
 
             <!-- Quick Actions CTA -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
                 <a href="{{ route('tickets.create') }}" class="flex items-center justify-between p-4 bg-primary text-white rounded-xl shadow-lg shadow-primary/20 hover:bg-blue-600 transition-all group">
                     <div class="flex flex-col items-start">
                         <span class="text-base font-bold">Ajukan Tiket Baru</span>
-                        <span class="text-xs text-blue-100 mt-1 text-left">Laporan kerusakan atau permintaan</span>
+                        <span class="text-xs text-blue-100 mt-1 text-left">Laporan kerusakan</span>
                     </div>
                     <span class="material-symbols-outlined text-3xl group-hover:translate-x-1 transition-transform">add_circle</span>
                 </a>
-                <button class="flex items-center justify-between p-4 bg-white dark:bg-[#233348] text-slate-900 dark:text-white border border-slate-200 dark:border-[#324867] rounded-xl hover:bg-slate-50 dark:hover:bg-[#324867] transition-all group">
+                
+                <a href="{{ route('user.faq') }}" class="flex items-center justify-between p-4 bg-white dark:bg-[#233348] text-slate-900 dark:text-white border border-slate-200 dark:border-[#324867] rounded-xl hover:bg-slate-50 dark:hover:bg-[#324867] transition-all group">
                     <div class="flex flex-col items-start">
                         <span class="text-base font-bold">Panduan / FAQ</span>
                         <span class="text-xs text-slate-500 dark:text-slate-400 mt-1 text-left">Cari solusi mandiri</span>
                     </div>
-                    <span class="material-symbols-outlined text-3xl text-slate-400 group-hover:text-white transition-colors">menu_book</span>
-                </button>
+                    <span class="material-symbols-outlined text-3xl text-slate-400 group-hover:text-primary transition-colors">menu_book</span>
+                </a>
+
+                @php
+                    $adminContact = \App\Models\User::where('role', 'admin')->whereNotNull('phone_number')->first();
+                    $waLink = $adminContact ? 'https://wa.me/' . $adminContact->phone_number : '#';
+                @endphp
+                <a href="{{ $waLink }}" target="_blank" class="flex items-center justify-between p-4 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 transition-all group">
+                    <div class="flex flex-col items-start">
+                        <span class="text-base font-bold">Hubungi Tim IT</span>
+                        <span class="text-xs text-white/80 mt-1 text-left">Via WhatsApp</span>
+                    </div>
+                    <i class="fa-brands fa-whatsapp text-3xl group-hover:scale-110 transition-transform"></i>
+                    <!-- Fallback icon if FontAwesome not loaded: -->
+                    @if(!Str::contains(asset('app.css'), 'font-awesome')) 
+                        <span class="material-symbols-outlined text-3xl">chat</span>
+                    @endif
+                </a>
             </div>
         </div>
 
