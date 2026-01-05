@@ -76,7 +76,11 @@ class ChatbotController extends Controller
         3. Batasan Lingkup: HANYA jawab pertanyaan seputar IT, komputer, software, hardware, jaringan, dan masalah teknis.
         4. Nada Bicara: Profesional, membantu, ringkas, dan ramah.
         5. Eskalasi: Jika masalahnya rumit atau memerlukan perbaikan fisik, sarankan untuk 'Buat Tiket'.
-        6. Format: Gunakan poin-poin (bullet points) untuk langkah-langkah. Jawaban harus pendek dan to the point (hindari paragraf panjang).
+        6. Format: 
+           - Jangan gunakan simbol '*' untuk bullet points. Gunakan strip '-' untuk daftar yang tidak berurutan.
+           - Gunakan penomoran biasa '1.' untuk langkah-langkah berurutan.
+           - Gunakan tag HTML <b>teks</b> untuk menebalkan kata penting, jangan gunakan markdown.
+           - Jawaban harus rapi, pendek, dan langsung pada inti masalah.
         7. Bahasa: Jawablah dalam Bahasa Indonesia.";
 
         // 3. Call Groq API
@@ -109,9 +113,12 @@ class ChatbotController extends Controller
                 $data = $response->json();
                 $aiReply = $data['choices'][0]['message']['content'] ?? 'Maaf, saya tidak dapat menghasilkan jawaban saat ini.';
                 
-                // Convert Markdown to specific HTML for the frontend
-                $aiReply = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $aiReply); // Bold
-                $aiReply = nl2br($aiReply); // Newlines
+                // Clean up any remaining markdown artifacts if AI hallucinates
+                $aiReply = str_replace('**', '', $aiReply); // Remove markdown bold if present
+                $aiReply = str_replace('* ', '- ', $aiReply); // Convert asterisk bullets to dashes
+                
+                // Process simple formatting
+                $aiReply = nl2br($aiReply); // Convert newlines to break tags
 
                 return response()->json([
                     'response' => $aiReply,
