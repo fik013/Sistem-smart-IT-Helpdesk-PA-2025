@@ -8,8 +8,20 @@
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary dark:text-blue-300 text-xs font-bold uppercase tracking-wider mb-4 backdrop-blur-sm">
                     <span class="material-symbols-outlined text-sm">auto_awesome</span>AI Powered
                 </span>
+                @php
+                    $hour = now()->format('H');
+                    if ($hour >= 5 && $hour < 11) {
+                        $greeting = 'Selamat Pagi';
+                    } elseif ($hour >= 11 && $hour < 15) {
+                        $greeting = 'Selamat Siang';
+                    } elseif ($hour >= 15 && $hour < 19) {
+                        $greeting = 'Selamat Sore';
+                    } else {
+                        $greeting = 'Selamat Malam';
+                    }
+                @endphp
                 <h1 class="text-white text-3xl md:text-5xl font-black leading-tight tracking-tight mb-2">
-                    Selamat Pagi, {{ explode(' ', $user->name)[0] }}.
+                    {{ $greeting }}, {{ explode(' ', $user->name)[0] }}.
                 </h1>
                 <p class="text-slate-200 text-lg font-light">
                     Ada yang bisa kami bantu hari ini? Gunakan asisten AI untuk solusi instan.
