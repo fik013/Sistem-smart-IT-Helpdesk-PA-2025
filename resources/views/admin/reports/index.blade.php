@@ -28,7 +28,6 @@
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div class="flex flex-col gap-2">
             <h1 class="text-[#101822] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em] print:text-black">Laporan Penyelesaian Tiket</h1>
-            <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal print:text-gray-600">History of resolved issues and performance metrics.</p>
         </div>
         <button onclick="window.print()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-[#233348] hover:bg-[#324867] text-white text-sm font-bold transition-all print:hidden">
             <span class="material-symbols-outlined" style="font-size: 20px;">print</span>
@@ -57,11 +56,11 @@
             <table class="w-full text-left text-sm text-slate-500 dark:text-[#92a9c9] print:text-gray-800">
                 <thead class="bg-slate-100 dark:bg-[#233348] text-xs uppercase text-[#101822] dark:text-white font-semibold print:bg-gray-100 print:text-black">
                     <tr>
-                        <th class="px-6 py-4 print:px-4 print:py-2">Date Resolved</th>
-                        <th class="px-6 py-4 print:px-4 print:py-2">Subject</th>
+                        <th class="px-6 py-4 print:px-4 print:py-2">Tanggal selesai</th>
+                        <th class="px-6 py-4 print:px-4 print:py-2">Subjek</th>
                         <th class="px-6 py-4 print:px-4 print:py-2">User</th>
-                        <th class="px-6 py-4 print:px-4 print:py-2">Resolution Note</th>
-                        <th class="px-6 py-4 print:hidden text-right">Action</th>
+                        <th class="px-6 py-4 print:px-4 print:py-2">Catatan penyelesaian</th>
+                        <th class="px-6 py-4 print:hidden text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-[#233348] print:divide-gray-200">

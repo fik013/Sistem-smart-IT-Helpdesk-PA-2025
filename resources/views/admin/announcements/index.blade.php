@@ -41,7 +41,7 @@
         </div>
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-surface-light dark:bg-surface-dark">
             <div class="flex justify-between items-start">
-                <p class="text-green-600 dark:text-green-500 text-sm font-medium uppercase tracking-wider">Active</p>
+                <p class="text-green-600 dark:text-green-500 text-sm font-medium uppercase tracking-wider">Aktif</p>
                 <span class="material-symbols-outlined text-green-600 dark:text-green-500">check_circle</span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -50,7 +50,7 @@
         </div>
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-surface-light dark:bg-surface-dark">
             <div class="flex justify-between items-start">
-                <p class="text-yellow-600 dark:text-yellow-500 text-sm font-medium uppercase tracking-wider">Expired Soon</p>
+                <p class="text-yellow-600 dark:text-yellow-500 text-sm font-medium uppercase tracking-wider">Berakhir segera</p>
                 <span class="material-symbols-outlined text-yellow-600 dark:text-yellow-500">timer</span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -59,7 +59,7 @@
         </div>
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-surface-light dark:bg-surface-dark">
             <div class="flex justify-between items-start">
-                <p class="text-red-600 dark:text-red-500 text-sm font-medium uppercase tracking-wider">Critical</p>
+                <p class="text-red-600 dark:text-red-500 text-sm font-medium uppercase tracking-wider">Penting</p>
                 <span class="material-symbols-outlined text-red-600 dark:text-red-500">warning</span>
             </div>
             <div class="flex items-baseline gap-2">

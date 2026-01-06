@@ -13,7 +13,7 @@
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div class="flex flex-col gap-2">
                 <h1 class="text-[#101822] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Admin Dashboard</h1>
-                <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Overview of system performance and tickets.</p>
+                <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Grafik performa dan tiket</p>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
             <!-- Total Users -->
             <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
                 <div class="flex justify-between items-start">
-                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Users</p>
+                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total User</p>
                     <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">group</span>
                 </div>
                 <div class="flex items-baseline gap-2">
@@ -33,7 +33,7 @@
             <!-- Total Tickets -->
             <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
                 <div class="flex justify-between items-start">
-                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Tickets</p>
+                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Tiket</p>
                     <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">confirmation_number</span>
                 </div>
                 <div class="flex items-baseline gap-2">
@@ -49,14 +49,14 @@
                 </div>
                 <div class="flex items-baseline gap-2">
                     <p class="text-[#101822] dark:text-white text-3xl font-bold">{{ $stats['pending_tickets'] }}</p>
-                    <p class="text-yellow-500 text-sm font-medium">Action Needed</p>
+                    <p class="text-yellow-500 text-sm font-medium">Perlu Tindakan</p>
                 </div>
             </div>
 
             <!-- Inventory -->
             <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
                 <div class="flex justify-between items-start">
-                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Inventory</p>
+                    <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Inventaris</p>
                     <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">inventory_2</span>
                 </div>
                 <div class="flex items-baseline gap-2">
@@ -102,7 +102,7 @@
 
         <!-- Chart Section -->
         <div class="rounded-xl border border-slate-200 dark:border-[#233348] p-5 bg-white dark:bg-[#1a232e]">
-            <h3 class="text-[#101822] dark:text-white text-lg font-bold mb-4">Ticket Analytics</h3>
+            <h3 class="text-[#101822] dark:text-white text-lg font-bold mb-4">Analisis Tiket</h3>
             <div class="w-full h-64">
                 <canvas id="ticketChart"></canvas>
             </div>
@@ -111,17 +111,17 @@
         <!-- Recent Tickets Table -->
         <div class="rounded-xl border border-slate-200 dark:border-[#233348] overflow-hidden bg-white dark:bg-[#1a232e]">
             <div class="p-4 border-b border-slate-200 dark:border-[#233348]">
-                <h3 class="text-[#101822] dark:text-white text-lg font-bold">Recent Tickets</h3>
+                <h3 class="text-[#101822] dark:text-white text-lg font-bold">Tiket Terbaru</h3>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-500 dark:text-[#92a9c9]">
                     <thead class="bg-slate-100 dark:bg-[#233348] text-xs uppercase text-[#101822] dark:text-white font-semibold">
                         <tr>
-                            <th class="px-6 py-4">Subject</th>
+                            <th class="px-6 py-4">Subjek</th>
                             <th class="px-6 py-4">User</th>
                             <th class="px-6 py-4">Status</th>
-                            <th class="px-6 py-4">Date</th>
-                            <th class="px-6 py-4 text-right">Action</th>
+                            <th class="px-6 py-4">Tanggal</th>
+                            <th class="px-6 py-4 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200 dark:divide-[#233348]">
@@ -138,7 +138,7 @@
                             </td>
                             <td class="px-6 py-4">{{ $ticket->created_at->diffForHumans() }}</td>
                             <td class="px-6 py-4 text-right">
-                                <a href="{{ route('admin.tickets.show', $ticket) }}" class="text-primary hover:text-blue-700 dark:hover:text-white transition-colors font-medium text-sm">Manage</a>
+                                <a href="{{ route('admin.tickets.show', $ticket) }}" class="text-primary hover:text-blue-700 dark:hover:text-white transition-colors font-medium text-sm">Kelola</a>
                             </td>
                         </tr>
                         @endforeach
@@ -170,7 +170,7 @@
             data: {
                 labels: ['Pending', 'Processing', 'Completed'],
                 datasets: [{
-                    label: '# of Tickets',
+                    label: 'Jumlah Tiket',
                     data: [{{ $stats['pending_tickets'] }}, {{ $stats['total_tickets'] - $stats['pending_tickets'] }}, 0],
                     backgroundColor: ['rgba(234, 179, 8, 0.5)', 'rgba(59, 130, 246, 0.5)', 'rgba(16, 185, 129, 0.5)'],
                     borderColor: ['rgba(234, 179, 8, 1)', 'rgba(59, 130, 246, 1)', 'rgba(16, 185, 129, 1)'],

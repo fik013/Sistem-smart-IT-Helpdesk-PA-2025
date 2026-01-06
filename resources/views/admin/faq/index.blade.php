@@ -15,7 +15,7 @@
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div class="flex flex-col gap-2">
             <h1 class="text-[#101822] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Frequently Asked Questions</h1>
-            <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Manage questions and answers displayed to users.</p>
+            <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Kelola pertanyaan dan jawaban yang akan tampil di halaman user</p>
         </div>
         <a href="{{ route('admin.faq.create') }}" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition-all">
             <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
@@ -36,10 +36,10 @@
             <table class="w-full text-left text-sm text-slate-500 dark:text-[#92a9c9]">
                 <thead class="bg-slate-100 dark:bg-[#233348] text-xs uppercase text-[#101822] dark:text-white font-semibold">
                     <tr>
-                        <th class="px-6 py-4" scope="col">Question</th>
-                        <th class="px-6 py-4" scope="col">Answer</th>
-                        <th class="px-6 py-4" scope="col" style="width: 150px;">Last Updated</th>
-                        <th class="px-6 py-4 text-right" scope="col" style="width: 120px;">Actions</th>
+                        <th class="px-6 py-4" scope="col">Pertanyaan</th>
+                        <th class="px-6 py-4" scope="col">Jawaban</th>
+                        <th class="px-6 py-4" scope="col" style="width: 150px;">Tanggal</th>
+                        <th class="px-6 py-4 text-right" scope="col" style="width: 120px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-[#233348]">
@@ -52,7 +52,7 @@
                             <div class="line-clamp-2">{{ Str::limit($faq->answer, 100) }}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div>{{ $faq->updated_at->format('M d, Y') }}</div>
+                            <div>{{ $faq->updated_at ? $faq->updated_at->format('M d, Y') : '-' }}</div>
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex justify-end gap-2">

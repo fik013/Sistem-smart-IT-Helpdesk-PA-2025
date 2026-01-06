@@ -14,7 +14,7 @@
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div class="flex flex-col gap-2">
             <h1 class="text-[#101822] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Kelola Akun Pengguna</h1>
-            <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Manage access for administrators and users.</p>
+            <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Kelola akses untuk admin dan pengguna.</p>
         </div>
         <button onclick="openModal()" class="flex items-center justify-center gap-2 rounded-lg h-10 px-5 bg-primary hover:bg-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition-all">
             <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
@@ -24,7 +24,7 @@
     <!-- Success Message -->
     @if(session('success'))
         <div class="p-4 mb-4 text-sm text-green-700 dark:text-green-400 rounded-lg bg-green-100 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20" role="alert">
-            <span class="font-medium">Success!</span> {{ session('success') }}
+            <span class="font-medium">Berhasil!</span> {{ session('success') }}
         </div>
     @endif
 
@@ -43,7 +43,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
             <div class="flex justify-between items-start">
-                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Users</p>
+                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Pengguna</p>
                 <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">group</span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -52,7 +52,7 @@
         </div>
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
             <div class="flex justify-between items-start">
-                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Admins</p>
+                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Admin</p>
                 <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">admin_panel_settings</span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -61,7 +61,7 @@
         </div>
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
             <div class="flex justify-between items-start">
-                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Users</p>
+                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Pengguna</p>
                 <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">person</span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -75,7 +75,7 @@
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 dark:text-[#92a9c9]">
                 <span class="material-symbols-outlined">search</span>
             </div>
-            <input name="search" value="{{ request('search') }}" class="block w-full rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] p-2.5 pl-10 text-sm text-[#101822] dark:text-white placeholder-slate-400 dark:placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all" placeholder="Search by name or email..." type="text"/>
+            <input name="search" value="{{ request('search') }}" class="block w-full rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] p-2.5 pl-10 text-sm text-[#101822] dark:text-white placeholder-slate-400 dark:placeholder-[#92a9c9] focus:border-primary focus:ring-primary focus:outline-none transition-all" placeholder="Cari berdasarkan nama atau email..." type="text"/>
         </div>
         <div class="flex w-full md:w-auto gap-3">
              <select name="department" onchange="this.form.submit()" class="rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] py-2 px-4 text-sm text-[#101822] dark:text-white focus:border-primary focus:ring-primary focus:outline-none">
@@ -87,7 +87,7 @@
             <select name="role" onchange="this.form.submit()" class="rounded-lg border border-slate-200 dark:border-[#324867] bg-slate-50 dark:bg-[#111822] py-2 px-4 text-sm text-[#101822] dark:text-white focus:border-primary focus:ring-primary focus:outline-none">
                 <option value="">Semua Role</option>
                 <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrator</option>
-                <option value="employee" {{ request('role') == 'employee' ? 'selected' : '' }}>Employee</option>
+                <option value="employee" {{ request('role') == 'employee' ? 'selected' : '' }}>Pegawai</option>
             </select>
             <button type="submit" class="hidden">Search</button>
         </div>
@@ -98,12 +98,12 @@
             <table class="w-full text-left text-sm text-slate-500 dark:text-[#92a9c9]">
                 <thead class="bg-slate-100 dark:bg-[#233348] text-xs uppercase text-[#101822] dark:text-white font-semibold">
                     <tr>
-                        <th class="px-6 py-4" scope="col">User</th>
+                        <th class="px-6 py-4" scope="col">Pengguna</th>
                         <th class="px-6 py-4" scope="col">Jabatan</th>
                         <th class="px-6 py-4" scope="col">Role</th>
                         <th class="px-6 py-4" scope="col">Email Verified</th>
-                        <th class="px-6 py-4" scope="col">Joined Date</th>
-                        <th class="px-6 py-4 text-right" scope="col">Actions</th>
+                        <th class="px-6 py-4" scope="col">Tanggal Bergabung</th>
+                        <th class="px-6 py-4 text-right" scope="col">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-[#233348]">
@@ -166,7 +166,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-4 text-center">No users found.</td>
+                        <td colspan="6" class="px-6 py-4 text-center">Tidak ada pengguna yang ditemukan.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -202,7 +202,7 @@
                         
                         <!-- Email -->
                         <div>
-                            <label for="email" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Email Address</label>
+                            <label for="email" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Alamat Email</label>
                             <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                         </div>
                         <!-- Password Info -->
@@ -226,7 +226,7 @@
                                 <input type="password" name="password" id="password" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                             </div>
                             <div>
-                                <label for="password_confirmation" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Confirm Password</label>
+                                <label for="password_confirmation" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Konfirmasi Password</label>
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                             </div>
                         </div>
@@ -236,14 +236,14 @@
                             <div>
                                 <label for="role" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Role</label>
                                 <select name="role" id="role" required class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
-                                    <option value="employee">Employee</option>
+                                    <option value="employee">Pegawai</option>
                                     <option value="admin">Administrator</option>
                                 </select>
                             </div>
                             <div>
                                 <label for="department" class="block text-sm font-medium text-slate-700 dark:text-[#92a9c9]">Jabatan</label>
                                 <select name="department" id="department" class="mt-1 block w-full rounded-md border-slate-300 dark:border-[#324867] bg-white dark:bg-[#111822] text-[#101822] dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
-                                    <option value="">Select Department</option>
+                                    <option value="">Pilih Departemen</option>
                                     @foreach($departments as $department)
                                         <option value="{{ $department->name }}">{{ $department->name }}</option>
                                     @endforeach

@@ -35,7 +35,7 @@
     <!-- Success Message -->
     @if(session('success'))
         <div class="p-4 mb-4 text-sm text-green-700 dark:text-green-400 rounded-lg bg-green-100 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20" role="alert">
-            <span class="font-medium">Success!</span> {{ session('success') }}
+            <span class="font-medium">Berhasil!</span> {{ session('success') }}
         </div>
     @endif
 
@@ -43,7 +43,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
             <div class="flex justify-between items-start">
-                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Tickets</p>
+                <p class="text-slate-500 dark:text-[#92a9c9] text-sm font-medium uppercase tracking-wider">Total Tiket</p>
                 <span class="material-symbols-outlined text-slate-400 dark:text-[#92a9c9]">confirmation_number</span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -61,7 +61,7 @@
         </div>
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
             <div class="flex justify-between items-start">
-                <p class="text-blue-600 dark:text-blue-500 text-sm font-medium uppercase tracking-wider">Processing</p>
+                <p class="text-blue-600 dark:text-blue-500 text-sm font-medium uppercase tracking-wider">Diproses</p>
                 <span class="material-symbols-outlined text-blue-600 dark:text-blue-500">autorenew</span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -70,7 +70,7 @@
         </div>
         <div class="flex flex-col gap-2 rounded-xl p-5 border border-slate-200 dark:border-[#233348] bg-white dark:bg-[#1a232e]">
             <div class="flex justify-between items-start">
-                <p class="text-green-600 dark:text-green-500 text-sm font-medium uppercase tracking-wider">Completed</p>
+                <p class="text-green-600 dark:text-green-500 text-sm font-medium uppercase tracking-wider">Selesai</p>
                 <span class="material-symbols-outlined text-green-600 dark:text-green-500">check_circle</span>
             </div>
             <div class="flex items-baseline gap-2">
@@ -85,13 +85,13 @@
             <table class="w-full text-left text-sm text-slate-500 dark:text-[#92a9c9]">
                 <thead class="bg-slate-100 dark:bg-[#233348] text-xs uppercase text-[#101822] dark:text-white font-semibold">
                     <tr>
-                        <th class="px-6 py-4" scope="col">SAW Score</th>
-                        <th class="px-6 py-4" scope="col">Subject</th>
-                        <th class="px-6 py-4" scope="col">User</th>
-                        <th class="px-6 py-4" scope="col">Urgency</th>
+                        <th class="px-6 py-4" scope="col">Skor SAW</th>
+                        <th class="px-6 py-4" scope="col">Subjek</th>
+                        <th class="px-6 py-4" scope="col">Pengguna</th>
+                        <th class="px-6 py-4" scope="col">Urgensi</th>
                         <th class="px-6 py-4" scope="col">Status</th>
-                        <th class="px-6 py-4" scope="col">Date</th>
-                        <th class="px-6 py-4 text-right" scope="col">Actions</th>
+                        <th class="px-6 py-4" scope="col">Tanggal</th>
+                        <th class="px-6 py-4 text-right" scope="col">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-[#233348]">
@@ -149,7 +149,7 @@
                                 </button>
                                 <a href="{{ route('admin.tickets.show', $ticket) }}" class="rounded-lg px-3 py-1.5 bg-primary hover:bg-blue-600 text-white text-xs font-bold transition-colors shadow-sm flex items-center gap-1">
                                     <span class="material-symbols-outlined text-[16px]">edit</span>
-                                    Process
+                                    Proses
                                 </a>
                             </div>
                         </td>
@@ -221,9 +221,9 @@
                                     <!-- User Info Card -->
                                     <div class="bg-slate-50 dark:bg-[#233348]/50 p-4 rounded-xl border border-slate-200 dark:border-[#324867] flex items-center gap-4">
                                         <div class="h-12 w-12 rounded-full bg-cover bg-center border border-slate-200 dark:border-transparent flex-shrink-0" 
-                                             :style="'background-image: url(https://ui-avatars.com/api/?name=' + (activeTicket.user ? encodeURIComponent(activeTicket.user.name) : 'User') + '&size=64)'"></div>
+                                             :style="'background-image: url(https://ui-avatars.com/api/?name=' + (activeTicket.user ? encodeURIComponent(activeTicket.user.name) : 'Pengguna') + '&size=64)'"></div>
                                         <div>
-                                            <p class="text-sm font-bold text-slate-800 dark:text-white" x-text="activeTicket.user ? activeTicket.user.name : 'Unknown User'"></p>
+                                            <p class="text-sm font-bold text-slate-800 dark:text-white" x-text="activeTicket.user ? activeTicket.user.name : 'Pengguna Tidak Diketahui'"></p>
                                             <p class="text-xs text-slate-600 dark:text-slate-400" x-text="activeTicket.user ? activeTicket.user.email : '-'"></p>
                                         </div>
                                     </div>
@@ -269,7 +269,7 @@
                                                     'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20': activeTicket.status === 'completed',
                                                     'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20': activeTicket.status === 'processing'
                                                     }"
-                                                    x-text="activeTicket.status.charAt(0).toUpperCase() + activeTicket.status.slice(1)">
+                                                    x-text="activeTicket.status === 'pending' ? 'Pending' : (activeTicket.status === 'processing' ? 'Diproses' : (activeTicket.status === 'completed' ? 'Selesai' : activeTicket.status))">
                                                 </span>
                                             </div>
 
