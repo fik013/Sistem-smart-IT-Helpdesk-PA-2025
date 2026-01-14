@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>@yield('title', 'Admin Panel - Smart IT Helpdesk')</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <!-- Fonts: Inter -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -40,6 +41,88 @@
     @stack('styles')
 </head>
 <body class="bg-[#f6f7f8] dark:bg-[#101822] font-display text-[#101822] dark:text-white overflow-hidden transition-colors duration-200">
+    <!-- Page Transition Loader -->
+    @if(session('login_success'))
+        <div id="page-loader" class="fixed inset-0 z-[9999] bg-[#f6f7f8] dark:bg-[#101822] flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out">
+            <!-- Assembly Animation Container -->
+            <div class="relative size-32 flex items-center justify-center">
+                <!-- Corner Shapes (Uniting Animation) -->
+                <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-xl opacity-0 animate-assemble-tl"></div>
+                <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-xl opacity-0 animate-assemble-tr"></div>
+                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-xl opacity-0 animate-assemble-bl"></div>
+                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-xl opacity-0 animate-assemble-br"></div>
+                
+                <!-- Center Icon (Appears after assembly) -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 animate-icon-reveal">
+                    <div class="size-20 bg-primary/10 rounded-full flex items-center justify-center text-primary shadow-lg shadow-primary/20 ring-1 ring-primary/20">
+                        <span class="material-symbols-outlined text-5xl animate-pulse">support_agent</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Animation -->
+            <div class="mt-8 flex flex-col items-center opacity-0 animate-text-reveal">
+                <h1 class="text-2xl font-black tracking-tight text-[#101822] dark:text-white">Smart IT Helpdesk</h1>
+                <div class="flex items-center gap-1 mt-2">
+                    <div class="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
+                    <div class="w-2 h-2 rounded-full bg-primary animate-bounce delay-75"></div>
+                    <div class="w-2 h-2 rounded-full bg-primary animate-bounce delay-150"></div>
+                </div>
+            </div>
+            <!-- Styles for Loader Animation -->
+            <style>
+                @keyframes assemble-tl { 0% { transform: translate(-40px, -40px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(16px, 16px); opacity: 1; } }
+                @keyframes assemble-tr { 0% { transform: translate(40px, -40px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(-16px, 16px); opacity: 1; } }
+                @keyframes assemble-bl { 0% { transform: translate(-40px, 40px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(16px, -16px); opacity: 1; } }
+                @keyframes assemble-br { 0% { transform: translate(40px, 40px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(-16px, -16px); opacity: 1; } }
+                @keyframes icon-reveal { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+                @keyframes text-reveal { 0% { transform: translateY(10px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+                .animate-assemble-tl { animation: assemble-tl 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .animate-assemble-tr { animation: assemble-tr 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .animate-assemble-bl { animation: assemble-bl 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .animate-assemble-br { animation: assemble-br 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .animate-icon-reveal { animation: icon-reveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards; }
+                .animate-text-reveal { animation: text-reveal 0.5s ease-out 0.8s forwards; }
+                .delay-75 { animation-delay: 75ms; }
+                .delay-150 { animation-delay: 150ms; }
+            </style>
+        </div>
+        <script>
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    const loader = document.getElementById('page-loader');
+                    if (loader) {
+                        loader.classList.add('opacity-0', 'pointer-events-none');
+                        setTimeout(() => { loader.remove(); }, 700);
+                    }
+                }, 1800);
+            });
+        </script>
+    @else
+        <!-- Simple Bounce Loader for Regular Navigation -->
+        <div id="page-loader" class="fixed inset-0 z-[9999] bg-[#f6f7f8] dark:bg-[#101822] flex items-center justify-center transition-opacity duration-500 ease-in-out">
+            <div class="flex flex-col items-center gap-3 animate-bounce">
+                <div class="size-20 bg-primary/10 rounded-full flex items-center justify-center text-primary shadow-lg shadow-primary/20 ring-4 ring-primary/5">
+                    <span class="material-symbols-outlined text-5xl">support_agent</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <h1 class="text-2xl font-black tracking-tight text-[#101822] dark:text-white">Smart IT Helpdesk</h1>
+                    <p class="text-sm font-medium text-slate-500 dark:text-[#92a9c9]">Memuat...</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    const loader = document.getElementById('page-loader');
+                    if (loader) {
+                        loader.classList.add('opacity-0', 'pointer-events-none');
+                        setTimeout(() => { loader.remove(); }, 500);
+                    }
+                }, 800);
+            });
+        </script>
+    @endif
     <div class="flex h-screen w-full flex-col overflow-hidden">
         <!-- TopNavBar -->
         <header class="flex flex-none items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-[#233348] bg-white dark:bg-[#111822] px-10 py-3 z-20 transition-colors duration-200">

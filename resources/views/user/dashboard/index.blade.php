@@ -2,10 +2,16 @@
 
 @section('content')
     <!-- Hero / AI Assistant Section -->
-    <section class="rounded-xl overflow-hidden relative min-h-[380px] flex flex-col justify-end p-6 md:p-10" data-alt="Abstract blue digital network background representing technology" style='background-image: linear-gradient(to top, rgba(16, 24, 34, 1) 0%, rgba(16, 24, 34, 0.6) 50%, rgba(16, 24, 34, 0.2) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDjijYdVs8ir_JimWi2F1S7oimRkknblNeOkEXLQCVMokfIrDGgrFgKCH0qCR6euy3GmgTAKfu0HunFapwXS5xjZpOPjHT5kN5grXtGKLmEgxt39zZpWjSDsSeYR8bpbkeLSkvHSVs7cTxaVJD0OgU3vajELroMNhtnOVGTiD75g8HwIT2-0ptgCT9tuRlqabgCGFjKINq93NsWq9sTKasAH2EtjPK3WW0VHnk8ZUlYIE12XPjY2bp93ZlQXxqoinEmkS_v2LPmeUI"); background-size: cover; background-position: center;'>
+    <!-- Hero / AI Assistant Section -->
+    <section class="rounded-xl overflow-hidden relative min-h-[380px] flex flex-col justify-end p-6 md:p-10 bg-[#f8fafc] dark:bg-[#0f172a] transition-all duration-500 group dark:shadow-[0_0_40px_-10px_rgba(56,189,248,0.2)]">
+        <!-- Animated Canvas Background -->
+        <canvas id="particle-canvas" class="absolute inset-0 w-full h-full z-0"></canvas>
+        <!-- Gradient Overlay for Readability - Adaptive -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent dark:from-[#0f172a] dark:via-[#0f172a]/80 dark:to-transparent z-0 pointer-events-none"></div>
         <div class="relative z-10 max-w-2xl w-full">
             <div class="mb-6 animate-fade-in-up">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary dark:text-blue-300 text-xs font-bold uppercase tracking-wider mb-4 backdrop-blur-sm">
+                <!-- AI Badge: Improved Contrast -->
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 dark:bg-primary/20 border border-white/30 dark:border-primary/30 text-white dark:text-blue-300 text-xs font-bold uppercase tracking-wider mb-4 backdrop-blur-md shadow-lg">
                     <span class="material-symbols-outlined text-sm">auto_awesome</span>AI Powered
                 </span>
                 @php
@@ -343,6 +349,128 @@
                     this.loading = false;
                 }
              }));
+        });
+
+        // Particle Animation Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            
+            // Configuration
+            const particleCount = 60;
+            const connectionDistance = 150;
+            const baseSpeed = 0.5;
+
+            // Colors
+            let colors = {
+                bg: '#0f172a',
+                particle: '#38bdf8', // sky-400
+                line: 'rgba(56, 189, 248, 0.2)'
+            };
+
+            function updateThemeColors() {
+                const isDark = document.documentElement.classList.contains('dark');
+                if (isDark) {
+                    colors = {
+                        particle: '#38bdf8', // sky-400 for dark
+                        line: 'rgba(56, 189, 248, 0.15)'
+                    };
+                } else {
+                    colors = {
+                        particle: '#3b82f6', // blue-500 for light
+                        line: 'rgba(59, 130, 246, 0.15)'
+                    };
+                }
+            }
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * baseSpeed;
+                    this.vy = (Math.random() - 0.5) * baseSpeed;
+                    this.size = Math.random() * 2 + 1;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Bounce off edges
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = colors.particle;
+                    ctx.fill();
+                }
+            }
+
+            function init() {
+                resize();
+                updateThemeColors();
+                particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+                animate();
+            }
+
+            function resize() {
+                width = canvas.width = canvas.parentElement.offsetWidth;
+                height = canvas.height = canvas.parentElement.offsetHeight;
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                
+                // Update and draw particles
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+
+                // Draw connections
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < connectionDistance) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = colors.line;
+                            ctx.lineWidth = 1 - distance / connectionDistance;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resize);
+            
+            // Watch for theme changes
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'class') {
+                        updateThemeColors();
+                    }
+                });
+            });
+            observer.observe(document.documentElement, { attributes: true });
+
+            init();
         });
     </script>
 @endpush

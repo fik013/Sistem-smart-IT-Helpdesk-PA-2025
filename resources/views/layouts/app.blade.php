@@ -16,6 +16,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Smart IT Helpdesk') }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <!-- Google Fonts & Material Symbols -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -84,6 +85,87 @@
     </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex flex-col overflow-x-hidden">
+    <!-- Page Transition Loader -->
+    @if(session('login_success'))
+        <div id="page-loader" class="fixed inset-0 z-[9999] bg-background-light dark:bg-background-dark flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out">
+            <!-- Assembly Animation Container -->
+            <div class="relative size-32 flex items-center justify-center">
+                <!-- Corner Shapes (Uniting Animation) -->
+                <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-xl opacity-0 animate-assemble-tl"></div>
+                <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-xl opacity-0 animate-assemble-tr"></div>
+                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-xl opacity-0 animate-assemble-bl"></div>
+                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-xl opacity-0 animate-assemble-br"></div>
+                
+                <!-- Center Icon (Appears after assembly) -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 animate-icon-reveal">
+                    <div class="size-20 bg-primary/10 rounded-full flex items-center justify-center text-primary shadow-lg shadow-primary/20 ring-1 ring-primary/20">
+                        <span class="material-symbols-outlined text-5xl animate-pulse">support_agent</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Text Animation -->
+            <div class="mt-8 flex flex-col items-center opacity-0 animate-text-reveal">
+                <h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Smart IT Helpdesk</h1>
+                <div class="flex items-center gap-1 mt-2">
+                    <div class="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
+                    <div class="w-2 h-2 rounded-full bg-primary animate-bounce delay-75"></div>
+                    <div class="w-2 h-2 rounded-full bg-primary animate-bounce delay-150"></div>
+                </div>
+            </div>
+            <!-- Styles for Loader Animation -->
+            <style>
+                @keyframes assemble-tl { 0% { transform: translate(-40px, -40px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(16px, 16px); opacity: 1; } }
+                @keyframes assemble-tr { 0% { transform: translate(40px, -40px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(-16px, 16px); opacity: 1; } }
+                @keyframes assemble-bl { 0% { transform: translate(-40px, 40px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(16px, -16px); opacity: 1; } }
+                @keyframes assemble-br { 0% { transform: translate(40px, 40px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(-16px, -16px); opacity: 1; } }
+                @keyframes icon-reveal { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+                @keyframes text-reveal { 0% { transform: translateY(10px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+                .animate-assemble-tl { animation: assemble-tl 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .animate-assemble-tr { animation: assemble-tr 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .animate-assemble-bl { animation: assemble-bl 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .animate-assemble-br { animation: assemble-br 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+                .animate-icon-reveal { animation: icon-reveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards; }
+                .animate-text-reveal { animation: text-reveal 0.5s ease-out 0.8s forwards; }
+                .delay-75 { animation-delay: 75ms; }
+                .delay-150 { animation-delay: 150ms; }
+            </style>
+            <script>
+                window.addEventListener('load', function() {
+                    setTimeout(() => {
+                        const loader = document.getElementById('page-loader');
+                        if (loader) {
+                            loader.classList.add('opacity-0', 'pointer-events-none');
+                            setTimeout(() => { loader.remove(); }, 700);
+                        }
+                    }, 1800);
+                });
+            </script>
+        </div>
+    @else
+        <!-- Simple Bounce Loader for Regular Navigation -->
+        <div id="page-loader" class="fixed inset-0 z-[9999] bg-background-light dark:bg-background-dark flex items-center justify-center transition-opacity duration-500 ease-in-out">
+            <div class="flex flex-col items-center gap-3 animate-bounce">
+                <div class="size-20 bg-primary/10 rounded-full flex items-center justify-center text-primary shadow-lg shadow-primary/20 ring-4 ring-primary/5">
+                    <span class="material-symbols-outlined text-5xl">support_agent</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Smart IT Helpdesk</h1>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Memuat...</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    const loader = document.getElementById('page-loader');
+                    if (loader) {
+                        loader.classList.add('opacity-0', 'pointer-events-none');
+                        setTimeout(() => { loader.remove(); }, 500);
+                    }
+                }, 800);
+            });
+        </script>
+    @endif
     <!-- Top Navigation Bar -->
     <div class="order-first z-50 sticky top-0">
         @include('layouts.header')

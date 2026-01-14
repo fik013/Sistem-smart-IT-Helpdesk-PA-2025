@@ -11,8 +11,15 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
+            $redirect = redirect()->route('admin.dashboard');
+        } else {
+            $redirect = redirect()->route('user.dashboard');
         }
-        return redirect()->route('user.dashboard');
+
+        if (session('login_success')) {
+            $redirect->with('login_success', true);
+        }
+
+        return $redirect;
     }
 }

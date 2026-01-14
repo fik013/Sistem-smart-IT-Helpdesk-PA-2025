@@ -17,6 +17,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,6 +51,29 @@
         </script>
     </head>
     <body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased">
+        <!-- Page Transition Loader -->
+        <div id="page-loader" class="fixed inset-0 z-[9999] bg-background-light dark:bg-background-dark flex items-center justify-center transition-opacity duration-500 ease-in-out">
+            <div class="flex flex-col items-center gap-3 animate-bounce">
+                <div class="size-20 bg-primary/10 rounded-full flex items-center justify-center text-primary shadow-lg shadow-primary/20 ring-4 ring-primary/5">
+                    <span class="material-symbols-outlined text-5xl">support_agent</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Smart IT Helpdesk</h1>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Memuat...</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    const loader = document.getElementById('page-loader');
+                    if (loader) {
+                        loader.classList.add('opacity-0', 'pointer-events-none');
+                        setTimeout(() => { loader.remove(); }, 500);
+                    }
+                }, 800);
+            });
+        </script>
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 relative overflow-hidden">
             
             <!-- Abstract Background Decoration -->

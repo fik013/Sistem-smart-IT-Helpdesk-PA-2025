@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Smart IT Helpdesk - Admin</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <!-- Fonts: Inter -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -42,6 +43,29 @@
     </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-white overflow-hidden">
+<!-- Page Transition Loader -->
+<div id="page-loader" class="fixed inset-0 z-[9999] bg-background-light dark:bg-background-dark flex items-center justify-center transition-opacity duration-500 ease-in-out">
+    <div class="flex flex-col items-center gap-3 animate-bounce">
+        <div class="size-20 bg-primary/10 rounded-full flex items-center justify-center text-primary shadow-lg shadow-primary/20 ring-4 ring-primary/5">
+            <span class="material-symbols-outlined text-5xl">support_agent</span>
+        </div>
+        <div class="flex flex-col items-center">
+            <h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Smart IT Helpdesk</h1>
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Memuat...</p>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            const loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => { loader.remove(); }, 500);
+            }
+        }, 800);
+    });
+</script>
 <div class="flex h-screen w-full flex-col overflow-hidden">
     <!-- TopNavBar -->
     <header class="flex flex-none items-center justify-between whitespace-nowrap border-b border-solid border-b-[#233348] bg-[#111822] px-10 py-3 z-20">
