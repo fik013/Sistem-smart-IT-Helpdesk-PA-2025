@@ -85,6 +85,7 @@
             <table class="w-full text-left text-sm text-slate-500 dark:text-[#92a9c9]">
                 <thead class="bg-slate-100 dark:bg-[#233348] text-xs uppercase text-[#101822] dark:text-white font-semibold">
                     <tr>
+                        <th class="px-6 py-4" scope="col">No</th>
                         <th class="px-6 py-4" scope="col">Skor SAW</th>
                         <th class="px-6 py-4" scope="col">Subjek</th>
                         <th class="px-6 py-4" scope="col">Pengguna</th>
@@ -96,7 +97,19 @@
                 </thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-[#233348]">
                     @forelse($tickets as $ticket)
+                    @php
+                        $currentNumber = ($tickets->currentPage() - 1) * $tickets->perPage() + $loop->iteration;
+                    @endphp
                     <tr class="hover:bg-slate-50 dark:hover:bg-[#233348]/50 transition-colors group">
+                        <td class="px-6 py-4">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold border shadow-sm
+                                {{ $currentNumber == 1 ? 'bg-red-600 text-white border-red-700' : 
+                                   ($currentNumber == 2 ? 'bg-orange-500 text-white border-orange-600' : 
+                                   ($currentNumber == 3 ? 'bg-amber-400 text-white border-amber-500' : 
+                                   'bg-slate-100 dark:bg-[#233348] text-slate-700 dark:text-white border-slate-200 dark:border-slate-700')) }}">
+                                {{ $currentNumber }}
+                            </div>
+                        </td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-500/10 px-2 py-1 text-xs font-bold text-blue-600 dark:text-blue-400 ring-1 ring-inset ring-blue-500/10 dark:ring-blue-500/20">
                                 {{ number_format($ticket->saw_score, 3) }}
@@ -156,7 +169,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center">Tidak ada tiket pending saat ini.</td>
+                        <td colspan="8" class="px-6 py-4 text-center">Tidak ada tiket pending saat ini.</td>
                     </tr>
                     @endforelse
                 </tbody>
