@@ -10,6 +10,8 @@ class SawService
 {
     public function calculateScore(Ticket $ticket)
     {
+        // Fallback for single ticket (e.g., when saving). 
+        // Real dynamic calculation is done in calculateScores() for a collection.
         $criterias = SawCriteria::with('subCriterias')->where('is_active', true)->get();
         $score = 0;
 
@@ -19,15 +21,14 @@ class SawService
             $code = strtoupper($criteria->code);
 
             switch ($code) {
-                // ... (Cases logic remains same, just capturing $val) ... 
-                case 'C1': // Tingkat Urgensi
+                case 'C1':
                     $val = $this->getSubCriteriaWeight($criteria, $ticket->urgency);
                     break;
-                case 'C2': // Jenis Aset
+                case 'C2':
                     $type = $ticket->inventory && $ticket->inventory->category ? $ticket->inventory->category->name : '';
                     $val = $this->getSubCriteriaWeight($criteria, $type);
                     break;
-                case 'C3': // Pengguna Aset
+                case 'C3':
                     if ($ticket->inventory) {
                          if ($ticket->inventory->user_id && $ticket->inventory->user_id == $ticket->user_id) {
                              $val = $this->getSubCriteriaWeight($criteria, 'Perorangan');
@@ -38,17 +39,12 @@ class SawService
                         $val = 0;
                     }
                     break;
-                case 'C4': // Jabatan Pengguna
+                case 'C4':
                     $dept = $ticket->user->department ?? '';
                     $val = $this->getSubCriteriaWeight($criteria, $dept);
                     break;
             }
 
-            // --- AUTOMATIC COST/BENEFIT LOGIC ---
-            // If attribute is 'cost', we invert the normalized value.
-            // Assumption: Sub-criteria weights in DB are always 'positive' (0-1 scale of magnitude).
-            // For Cost: Higher magnitude = Lower Score.
-            // Formula: Valid Value = 1.0 - Normalized Weight (Simple Inversion)
             if (strtolower($criteria->attribute) === 'cost') {
                 $val = 1.0 - $val;
             }
@@ -57,6 +53,83 @@ class SawService
         }
 
         return $score;
+    }
+
+    public function calculateScores($tickets)
+    {
+        if ($tickets->isEmpty()) return $tickets;
+
+        $criterias = SawCriteria::with('subCriterias')->where('is_active', true)->get();
+        
+        $matrix = [];
+        // 1. Matriks Keputusan (X)
+        foreach ($tickets as $idx => $ticket) {
+            foreach ($criterias as $criteria) {
+                $code = strtoupper($criteria->code);
+                $val = 0;
+                
+                switch ($code) {
+                    case 'C1':
+                        $val = $this->getSubCriteriaWeight($criteria, $ticket->urgency);
+                        break;
+                    case 'C2':
+                        $type = $ticket->inventory && $ticket->inventory->category ? $ticket->inventory->category->name : '';
+                        $val = $this->getSubCriteriaWeight($criteria, $type);
+                        break;
+                    case 'C3':
+                        if ($ticket->inventory) {
+                             if ($ticket->inventory->user_id && $ticket->inventory->user_id == $ticket->user_id) {
+                                 $val = $this->getSubCriteriaWeight($criteria, 'Perorangan');
+                             } else {
+                                 $val = $this->getSubCriteriaWeight($criteria, 'Divisi / Departemen');
+                             }
+                        } else {
+                            $val = 0;
+                        }
+                        break;
+                    case 'C4':
+                        $dept = $ticket->user->department ?? '';
+                        $val = $this->getSubCriteriaWeight($criteria, $dept);
+                        break;
+                }
+                $matrix[$idx][$code] = (float) $val;
+            }
+        }
+
+        // 2. Cari Min dan Max
+        $minMax = [];
+        foreach ($criterias as $criteria) {
+            $code = strtoupper($criteria->code);
+            $values = array_column($matrix, $code);
+            $minMax[$code] = [
+                'min' => !empty($values) ? min($values) : 0,
+                'max' => !empty($values) ? max($values) : 0,
+            ];
+        }
+
+        // 3. Normalisasi (R) dan Perhitungan Nilai Preferensi (V)
+        foreach ($tickets as $idx => $ticket) {
+            $score = 0;
+            foreach ($criterias as $criteria) {
+                $code = strtoupper($criteria->code);
+                $rawVal = $matrix[$idx][$code];
+                $max = $minMax[$code]['max'];
+                $min = $minMax[$code]['min'];
+                $weight = (float) $criteria->weight;
+
+                $normalized = 0;
+                if (strtolower($criteria->attribute) === 'benefit') {
+                    $normalized = ($max > 0) ? ($rawVal / $max) : 0;
+                } else { // cost
+                    $normalized = ($rawVal > 0) ? ($min / $rawVal) : (($min == 0 && $rawVal == 0) ? 0 : 0);
+                }
+
+                $score += $weight * $normalized;
+            }
+            $ticket->saw_score = $score;
+        }
+
+        return $tickets;
     }
 
     private function getSubCriteriaWeight($criteria, $value)

@@ -82,6 +82,7 @@
                         <h1 class="text-4xl lg:text-5xl font-black leading-tight tracking-[-0.033em] text-slate-900 dark:text-white">
                             Selamat Datang
                         </h1>
+                        <h2 class="text-4xl lg:text-3xl font-black leading-tight tracking-[-0.033em] text-slate-900 dark:text-white">Di Sistem informasi Smart IT Helpdesk</h2>
                         <p class="text-slate-500 dark:text-text-secondary text-lg font-normal leading-relaxed">
                             Selesaikan permasalahan IT Anda dengan cepat dan efektif di sini.
                         </p>
