@@ -22,11 +22,8 @@ class TicketController extends Controller
             ->whereIn('status', ['pending', 'processing'])
             ->get();
 
-        // Calculate SAW Score for each ticket dynamically based on current weights
-        $tickets->transform(function ($ticket) use ($sawService) {
-            $ticket->saw_score = $sawService->calculateScore($ticket);
-            return $ticket;
-        });
+        // Calculate SAW Score dynamically using Matrix Normalization (Max/Min)
+        $tickets = $sawService->calculateScores($tickets);
 
         // Sort by SAW Score Descending
         $tickets = $tickets->sortByDesc('saw_score');

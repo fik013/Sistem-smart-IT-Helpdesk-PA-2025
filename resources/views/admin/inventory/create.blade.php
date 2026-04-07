@@ -16,7 +16,7 @@
     <!-- Page Heading -->
     <div class="flex flex-col gap-2">
         <h1 class="text-slate-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Tambah Aset Baru</h1>
-        <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Assign new equipment to a user.</p>
+        <p class="text-slate-500 dark:text-[#92a9c9] text-base font-normal">Tambahkan aset baru untuk divisi ataupun perorangan.</p>
     </div>
 
     <!-- Form -->
