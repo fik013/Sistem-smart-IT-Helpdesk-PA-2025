@@ -154,10 +154,10 @@
                                 <button onclick='openEditModal(@json($user))' class="rounded-lg p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300 transition-colors" title="Edit User">
                                     <span class="material-symbols-outlined text-[20px]">edit</span>
                                 </button>
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?');">
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="rounded-lg p-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 transition-colors" title="Delete User">
+                                    <button type="button" onclick="confirmDelete(this, 'Apakah Anda yakin ingin menghapus user ini?')" class="rounded-lg p-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 transition-colors" title="Delete User">
                                         <span class="material-symbols-outlined text-[20px]">delete</span>
                                     </button>
                                 </form>

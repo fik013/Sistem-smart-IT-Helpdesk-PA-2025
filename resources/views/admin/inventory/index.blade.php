@@ -143,10 +143,10 @@
                                 <a href="{{ route('admin.inventory.edit', $item) }}" class="rounded-lg p-2 text-slate-400 dark:text-[#92a9c9] hover:bg-primary/20 hover:text-primary dark:hover:text-white transition-colors" title="Edit Item">
                                     <span class="material-symbols-outlined text-[20px]">edit</span>
                                 </a>
-                                <form action="{{ route('admin.inventory.destroy', $item) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');" class="inline">
+                                <form action="{{ route('admin.inventory.destroy', $item) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="rounded-lg p-2 text-slate-400 dark:text-[#92a9c9] hover:bg-red-500/20 hover:text-red-500 dark:hover:text-red-400 transition-colors" title="Delete Item">
+                                    <button type="button" onclick="confirmDelete(this, 'Apakah Anda yakin ingin menghapus aset ini?')" class="rounded-lg p-2 text-slate-400 dark:text-[#92a9c9] hover:bg-red-500/20 hover:text-red-500 dark:hover:text-red-400 transition-colors" title="Delete Item">
                                         <span class="material-symbols-outlined text-[20px]">delete</span>
                                     </button>
                                 </form>

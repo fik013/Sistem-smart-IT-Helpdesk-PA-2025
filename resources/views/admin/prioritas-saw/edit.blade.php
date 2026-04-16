@@ -143,10 +143,10 @@
                                             {{-- Urgency & Asset User: Only Edit, No Delete --}}
                                             <button onclick="openEditSubCriteriaModal('{{ $sub->id }}', '{{ $sub->name }}', '{{ $sub->weight }}')" class="text-primary hover:text-blue-900 dark:hover:text-blue-400">Edit Bobot</button>
                                         @else
-                                            <form action="{{ route('admin.sub-criterias.destroy', $sub->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus sub-kriteria ini?');">
+                                            <form action="{{ route('admin.sub-criterias.destroy', $sub->id) }}" method="POST" class="inline-block">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900 dark:hover:text-red-400">Hapus</button>
+                                                <button type="button" onclick="confirmDelete(this, 'Hapus sub-kriteria ini?')" class="text-red-600 hover:text-red-900 dark:hover:text-red-400">Hapus</button>
                                             </form>
                                         @endif
                                     </td>

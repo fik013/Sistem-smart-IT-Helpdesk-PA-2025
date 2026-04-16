@@ -397,8 +397,75 @@
     </style>
     @endif
 
+    <!-- Global Delete Confirmation Modal -->
+    <div x-data="{ 
+            show: false, 
+            formToSubmit: null,
+            message: 'Apakah Anda yakin ingin menghapus data ini?',
+            init() {
+                window.addEventListener('open-delete-modal', (e) => {
+                    this.formToSubmit = e.detail.form;
+                    this.message = e.detail.message || this.message;
+                    this.show = true;
+                });
+            },
+            submitForm() {
+                if(this.formToSubmit) {
+                    this.formToSubmit.submit();
+                }
+            }
+         }"
+         x-show="show"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+         style="display: none;">
+        
+        <div @click.away="show = false"
+             x-show="show"
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="opacity-0 scale-90 translate-y-4"
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             class="bg-white dark:bg-[#1a232e] rounded-2xl shadow-2xl max-w-sm w-full p-8 text-center border border-slate-200 dark:border-[#233348] relative overflow-hidden">
+            
+            <!-- Warning Icon -->
+            <div class="mb-6 flex justify-center text-red-600">
+                <div class="h-20 w-20 bg-red-100 dark:bg-red-500/10 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-5xl">warning</span>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-black text-[#101822] dark:text-white mb-2">Konfirmasi Hapus</h3>
+            <p class="text-slate-500 dark:text-[#92a9c9] mb-8 leading-relaxed" x-text="message"></p>
+
+            <div class="flex gap-3">
+                <button @click="show = false" 
+                        class="flex-1 py-3 px-6 bg-slate-100 dark:bg-[#233348] hover:bg-slate-200 dark:hover:bg-[#324867] text-slate-700 dark:text-white font-bold rounded-xl transition-all active:scale-95">
+                    Batal
+                </button>
+                <button @click="submitForm()" 
+                        class="flex-1 py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-600/20 active:scale-95">
+                    Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
     @stack('scripts')
     <script>
+        // Global delete confirmation helper
+        function confirmDelete(button, message) {
+            const form = button.closest('form');
+            window.dispatchEvent(new CustomEvent('open-delete-modal', {
+                detail: { form: form, message: message }
+            }));
+            return false;
+        }
+
         // Sidebar Toggle Logic
         function toggleSidebar() {
             const sidebar = document.getElementById('admin-sidebar');
