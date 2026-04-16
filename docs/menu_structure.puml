@@ -1,0 +1,49 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 50
+left to right direction
+
+package "Sistem Smart IT Helpdesk PA 2025" {
+
+  class "Halaman Publik (Landing Page)" as Public {
+    + /
+    + /fitur-unggulan
+    + /login
+    + Mode Terang & Gelap
+  }
+
+  class "Menu Pengguna (Employee)" as Employee {
+    + Dashboard
+    + Profil Akun
+    + Inventory (Daftar Aset)
+    + FAQ (Basis Pengetahuan)
+    + Chatbot AI
+    + Tiket
+      - Buat Tiket
+      - Riwayat Tiket
+    + Logout
+  }
+
+  class "Menu Administrator" as Admin {
+    + Dashboard Admin
+    + Profil Akun
+    + Kelola Tiket
+    + Asset Management (Inventory)
+    + Kategori Aset
+    + Kelola Akun (Users)
+    + Kelola Jabatan (Departments)
+    + Kelola FAQ
+    + Reports (Laporan)
+    + Prioritas SAW
+      - Kriteria
+      - Sub-Kriteria
+    + Kelola Pengumuman
+    + Logout
+  }
+
+  Public -[hidden]-> Employee
+  Employee -[hidden]-> Admin
+
+}
+@enduml

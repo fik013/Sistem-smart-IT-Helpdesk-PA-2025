@@ -10,8 +10,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    return view('landing-page.index');
+})->name('landing-page');
+
+Route::get('/fitur-unggulan', function () {
+    return view('landing-page.features');
+})->name('landing-page.features');
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
