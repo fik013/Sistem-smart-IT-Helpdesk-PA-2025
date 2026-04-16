@@ -5,7 +5,7 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2">
         <div class="flex flex-col gap-2">
             <h1 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
-                Inventaris Pribadi</h1>
+                Inventaris Divisi & Pribadi</h1>
             <p class="text-slate-500 dark:text-text-secondary text-base font-normal leading-normal max-w-xl">
                 Kelola dan pantau semua aset IT yang ditugaskan kepada Anda, termasuk perangkat keras dan lisensi
                 perangkat lunak.
