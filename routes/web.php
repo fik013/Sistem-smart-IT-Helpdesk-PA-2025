@@ -13,9 +13,7 @@ Route::get('/', function () {
     return view('landing-page.index');
 })->name('landing-page');
 
-Route::get('/fitur-unggulan', function () {
-    return view('landing-page.features');
-})->name('landing-page.features');
+
 
 
 Route::middleware(['auth', 'verified'])->group(function () {

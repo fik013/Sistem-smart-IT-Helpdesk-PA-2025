@@ -193,7 +193,7 @@
         </div>
     </div>
 
-    <form id="logout-form-header" flexaction="{{ route('logout') }}" method="POST" style="display: none;">
+    <form id="logout-form-header" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
     
