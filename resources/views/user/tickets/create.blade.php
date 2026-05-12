@@ -32,8 +32,8 @@
                                 <option value="" selected disabled>-- Pilih Aset yang Mengalami Kendala --</option>
                                 @foreach($inventories as $inventory)
                                     <option value="{{ $inventory->id }}" {{ request('asset_id') == $inventory->id ? 'selected' : '' }}>
-                                        @if($inventory->user_id === auth()->id())
-                                            👤 Personal - {{ $inventory->item_name }} ({{ $inventory->category->name ?? 'Uncategorized' }})
+                                        @if($inventory->user_id)
+                                            👤 Pribadi - {{ $inventory->item_name }} ({{ $inventory->category->name ?? 'Uncategorized' }})
                                         @else
                                             🏢 Dept - {{ $inventory->item_name }} ({{ $inventory->category->name ?? 'Uncategorized' }})
                                         @endif
@@ -220,7 +220,7 @@
                             data.forEach(faq => {
                                 const article = document.createElement('div'); // Changed from <a> to <div> as we handle click manually for expanding, or keep it wrapper
                                 // Using div wrapper to allow internal buttons without navigation issues
-                                article.className = 'group relative p-3 rounded-lg hover:bg-[#233348] transition-colors border border-transparent hover:border-slate-700';
+                                article.className = 'group relative p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#233348] transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700';
                                 
                                 // Store data
                                 article.dataset.full = faq.answer.replace(/<[^>]*>?/gm, ''); // Strip tags for text content, or handle HTML if safe
@@ -228,7 +228,7 @@
 
                                 article.innerHTML = `
                                     <div class="pr-6">
-                                        <h4 class="text-white text-sm font-medium mb-1 group-hover:text-primary transition-colors">${faq.question}</h4>
+                                        <h4 class="text-primary text-sm font-medium mb-1">${faq.question}</h4>
                                         <p class="text-xs text-slate-500 line-clamp-2 transition-all duration-300">${faq.answer_preview}</p>
                                     </div>
                                     <button type="button" class="expand-btn absolute top-3 right-3 text-slate-500 hover:text-white transition-colors">
@@ -240,7 +240,7 @@
                                 // Separator
                                 if (data.indexOf(faq) < data.length - 1) {
                                     const sep = document.createElement('div');
-                                    sep.className = 'h-px bg-slate-700 w-full';
+                                    sep.className = 'h-px bg-slate-200 dark:bg-slate-700 w-full';
                                     suggestionsContainer.appendChild(sep);
                                 }
                             });

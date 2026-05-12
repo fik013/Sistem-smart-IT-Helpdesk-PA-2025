@@ -59,11 +59,11 @@ class InventoryController extends Controller
         $user = Auth::user();
         $hasAccess = false;
         
-        if ($inventory->user_id === $user->id) {
+        if ($inventory->user_id == $user->id) {
             $hasAccess = true;
         } elseif ($user->department) {
             $dept = Department::where('name', $user->department)->first();
-            if ($dept && $inventory->department_id === $dept->id) {
+            if ($dept && $inventory->department_id == $dept->id) {
                 $hasAccess = true;
             }
         }

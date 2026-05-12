@@ -40,15 +40,7 @@
             <p class="text-slate-900 dark:text-white text-3xl font-bold leading-tight mt-1">
                 {{ $inventories->where('status', 'maintenance')->count() }}</p>
         </div>
-        <div
-            class="flex flex-col gap-1 rounded-xl p-5 border border-slate-200 dark:border-border-dark bg-white dark:bg-[#1A2634] shadow-sm">
-            <div class="flex items-center justify-between">
-                <p class="text-slate-500 dark:text-text-secondary text-sm font-medium uppercase tracking-wider">Jadwal
-                    Refresh</p>
-                <span class="material-symbols-outlined text-yellow-500">update</span>
-            </div>
-            <p class="text-slate-900 dark:text-white text-3xl font-bold leading-tight mt-1">0</p>
-        </div>
+    
     </div>
 
     <!-- Toolbar (Search & Filters) -->
@@ -131,10 +123,10 @@
                             <p class="text-slate-500 dark:text-text-secondary text-sm font-mono">
                                 {{ $inventory->serial_number }}
                             </p>
-                             @if($inventory->user_id === auth()->id())
+                             @if($inventory->user_id)
                                 <span class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/20 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-700/10 dark:ring-blue-400/20">Pribadi</span>
                             @else
-                                <span class="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-900/20 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-300 ring-1 ring-inset ring-purple-700/10 dark:ring-purple-400/20">Shared</span>
+                                <span class="inline-flex items-center rounded-md bg-purple-50 dark:bg-purple-900/20 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-300 ring-1 ring-inset ring-purple-700/10 dark:ring-purple-400/20">Per Divisi</span>
                             @endif
                         </div>
                     </div>
@@ -148,14 +140,14 @@
                         <div class="flex flex-col">
                             <span class="text-slate-400 dark:text-text-secondary text-xs flex items-center gap-1">
                                 Ownership
-                                @if($inventory->user_id === auth()->id())
+                                @if($inventory->user_id)
                                     <span class="material-symbols-outlined text-[14px] text-blue-500">person</span>
                                 @else
                                     <span class="material-symbols-outlined text-[14px] text-purple-500">groups</span>
                                 @endif
                             </span>
                             <span class="text-slate-900 dark:text-white font-medium">
-                                {{ $inventory->user_id === auth()->id() ? 'Personal' : ($inventory->department->name ?? 'Department') }}
+                                {{ $inventory->user_id ? 'Pribadi' : ($inventory->department->name ?? 'Per Divisi') }}
                             </span>
                         </div>
                         <div class="flex flex-col col-span-2">
